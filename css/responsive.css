@@ -1,0 +1,244 @@
+/* ============================================
+   Responsive Styles
+   ============================================ */
+
+/* Large screens */
+@media (max-width: 1400px) {
+    .works-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 1200px) {
+    .works-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Medium screens */
+@media (max-width: 1024px) {
+    .section {
+        padding: var(--space-6);
+    }
+    
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-10);
+    }
+    
+    .about-visual {
+        order: -1;
+    }
+    
+    .profile-card {
+        max-width: 320px;
+    }
+    
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-10);
+    }
+    
+    .contact-form-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .scroll-indicator {
+        right: var(--space-4);
+    }
+    
+    .main-header {
+        padding: var(--space-3) var(--space-4);
+    }
+    
+    .main-nav {
+        display: none;
+    }
+}
+
+/* Small screens */
+@media (max-width: 768px) {
+    :root {
+        --text-4xl: 1.875rem;
+        --text-5xl: 2.25rem;
+        --text-6xl: 3rem;
+        --text-7xl: 3.75rem;
+    }
+    
+    .section {
+        padding: var(--space-4);
+        padding-top: 80px;
+    }
+    
+    .hero-title {
+        font-size: var(--text-4xl);
+    }
+    
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .hero-stats {
+        gap: var(--space-8);
+    }
+    
+    .works-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .skills-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-works .section-content {
+        max-height: none;
+    }
+    
+    .scroll-indicator {
+        display: none;
+    }
+    
+    .logo span {
+        display: none;
+    }
+    
+    .section-title {
+        font-size: var(--text-3xl);
+    }
+    
+    .about-highlights {
+        gap: var(--space-3);
+    }
+    
+    .highlight-item {
+        padding: var(--space-3);
+    }
+    
+    .contact-grid {
+        gap: var(--space-8);
+    }
+    
+    .contact-form-wrapper {
+        padding: var(--space-6);
+    }
+    
+    .section-footer {
+        position: relative;
+        margin-top: var(--space-8);
+        padding-bottom: var(--space-4);
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .hero-stats {
+        flex-direction: column;
+        gap: var(--space-4);
+    }
+    
+    .stat-item {
+        flex-direction: row;
+        gap: var(--space-2);
+    }
+    
+    .profile-image {
+        width: 140px;
+        height: 140px;
+    }
+    
+    .skill-category {
+        padding: var(--space-6);
+    }
+    
+    .work-info {
+        padding: var(--space-4);
+    }
+    
+    .work-title {
+        font-size: var(--text-lg);
+    }
+}
+
+/* Touch devices */
+@media (pointer: coarse) {
+    .work-overlay {
+        opacity: 1;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 50%);
+        align-items: flex-end;
+        padding: var(--space-4);
+    }
+    
+    .view-btn {
+        transform: translateY(0);
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .scroll-hint {
+        display: none;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .section {
+        transition: none;
+    }
+    
+    .gradient-orb {
+        animation: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.95);
+        --glass-border: rgba(0, 0, 0, 0.3);
+    }
+    
+    [data-theme="dark"] {
+        --glass-bg: rgba(0, 0, 0, 0.95);
+        --glass-border: rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* Print styles */
+@media print {
+    .scroll-indicator,
+    .main-header,
+    .scroll-hint,
+    .section-bg {
+        display: none !important;
+    }
+    
+    .section {
+        position: relative !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        page-break-after: always;
+        height: auto !important;
+        min-height: 100vh;
+    }
+    
+    body {
+        overflow: auto !important;
+    }
+}

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人作品集 | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/fullpage.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Iconfont 图标库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iconfont/iconfont@1.0.0/dist/iconfont.css">
+</head>
+<body>
+    <!-- 主导航 -->
+    <header class="main-header">
+        <div class="header-inner">
+            <a href="#" class="logo">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="currentColor" fill-opacity="0.1"/>
+                    <text x="20" y="28" text-anchor="middle" fill="currentColor" font-size="20" font-weight="700" font-family="Inter, sans-serif">L</text>
+                </svg>
+                <span>LBD</span>
+            </a>
+            <nav class="main-nav" aria-label="主导航">
+                <button class="nav-link active" data-section="0">首页</button>
+                <button class="nav-link" data-section="1">关于</button>
+                <button class="nav-link" data-section="2">作品</button>
+                <button class="nav-link" data-section="3">技能</button>
+                <button class="nav-link" data-section="4">联系</button>
+            </nav>
+            <button class="theme-toggle" aria-label="切换主题">
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- 全屏滚动容器 -->
+    <main class="fullpage-container">
+        <!-- Section 1: 首页/英雄区 -->
+        <section class="section section-hero" data-section="0">
+            <div class="section-bg">
+                <div class="gradient-orb orb-1"></div>
+                <div class="gradient-orb orb-2"></div>
+                <div class="gradient-orb orb-3"></div>
+            </div>
+            <div class="section-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span>探索中</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="title-line">用 AI 编织想象</span>
+                    <span class="title-line">让创意触手可及</span>
+                </h1>
+                <p class="hero-subtitle">
+                    一名热衷于探索 AI 与创造边界的在校学生，<br>
+                    致力于将脑海中的理想工具化为现实，融合设计之美与功能之实。
+                </p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" data-section="2">
+                        <span>浏览作品</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                    <button class="btn btn-secondary" data-section="4">
+                        <span>联系我</span>
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">∞</span>
+                        <span class="stat-label">好奇心</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">N+</span>
+                        <span class="stat-label">AI 实验</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">学习状态</span>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-hint">
+                <span>向下滚动</span>
+                <div class="scroll-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M19 12l-7 7-7-7"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: 关于我 -->
+        <section class="section section-about" data-section="1">
+            <div class="section-bg">
+                <div class="grid-pattern"></div>
+            </div>
+            <div class="section-content">
+                <div class="about-grid">
+                    <div class="about-visual">
+                        <div class="profile-card">
+                            <div class="profile-image">
+                                <img src="img/me.jpg" alt="LaoBiDeng321" class="profile-avatar">
+                                <div class="profile-ring"></div>
+                            </div>
+                            <div class="profile-info">
+                                <h3>LaoBiDeng321</h3>
+                                <p>学生</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-content">
+                        <div class="section-header">
+                            <span class="section-tag">关于我</span>
+                            <h2 class="section-title">用设计讲述故事</h2>
+                        </div>
+                        <div class="about-text">
+                            <p>
+                                我是一名热衷于探索技术边界的学生，致力于运用人工智能的力量，将脑海中那些灵光一闪的理想工具转化为现实。
+                                对我而言，开发不仅仅是一行行代码的堆砌，更是一场关于创造力与工程思维的深度对话——既要雕琢出令人赏心悦目的视觉美感，也要构建出流畅 intuitive 的功能体验。
+                            </p>
+                            <p>
+                                在这个 AI 迅猛发展的时代，我深信技术的民主化正在重塑创造的可能性。
+                                我渴望成为这场变革的参与者与推动者，用代码编织想象，用设计赋予温度，让每一个从脑海中诞生的工具都能真正触达人心、解决实际问题。
+                            </p>
+                        </div>
+                        <div class="about-highlights">
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                    </svg>
+                                </div>
+                                <div class="highlight-content">
+                                    <h4>AI 驱动</h4>
+                                    <p>善用人工智能工具，将想象快速转化为原型</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+                                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+                                        <path d="M2 2l7.586 7.586"/>
+                                        <circle cx="11" cy="11" r="2"/>
+                                    </svg>
+                                </div>
+                                <div class="highlight-content">
+                                    <h4>跨界融合</h4>
+                                    <p>不拘泥于单一领域，在设计与技术间自由穿梭</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                    </svg>
+                                </div>
+                                <div class="highlight-content">
+                                    <h4>持续进化</h4>
+                                    <p>保持学习热情，在试错中快速成长迭代</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: 作品展示 -->
+        <section class="section section-works" data-section="2">
+            <div class="section-bg">
+                <div class="gradient-orb orb-4"></div>
+            </div>
+            <div class="section-content">
+                <div class="section-header centered">
+                    <span class="section-tag">作品展示</span>
+                    <h2 class="section-title">实验与探索</h2>
+                    <p class="section-desc">这里记录着我用 AI 辅助创作的实验项目，每一个想法都是一次学习的机会</p>
+                </div>
+                <div class="works-grid">
+                    <!-- SimpleNAVY 游戏网页 -->
+                    <article class="work-card" data-work="1">
+                        <div class="work-image">
+                            <img src="img/SimpleNAVY.png" alt="SimpleNAVY" class="work-img">
+                            <div class="work-overlay">
+                                <a href="https://simplenavy.online/" class="view-btn" target="_blank" rel="noopener noreferrer">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <span>查看项目</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="work-info">
+                            <div class="work-meta">
+                                <span class="work-category">网页设计</span>
+                                <span class="work-year">2026</span>
+                            </div>
+                            <h3 class="work-title">SimpleNAVY</h3>
+                            <p class="work-desc">帮助朋友开发的游戏设计的宣传网页，展示游戏特色与玩法。</p>
+                        </div>
+                    </article>
+
+                    <!-- OtherShore Game Studio -->
+                    <article class="work-card" data-work="2">
+                        <div class="work-image">
+                            <img src="img/OtherShoreGameStudio.png" alt="OtherShore Game Studio" class="work-img">
+                            <div class="work-overlay">
+                                <a href="https://simplenavy.online/othershoregamestudio/" class="view-btn" target="_blank" rel="noopener noreferrer">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <span>查看项目</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="work-info">
+                            <div class="work-meta">
+                                <span class="work-category">网页设计</span>
+                                <span class="work-year">2026</span>
+                            </div>
+                            <h3 class="work-title">OtherShore Game Studio</h3>
+                            <p class="work-desc">朋友创建的游戏工作室官网，展示团队作品与信息。</p>
+                        </div>
+                    </article>
+
+                    <!-- SoloPlugin 浏览器插件 -->
+                    <article class="work-card" data-work="3">
+                        <div class="work-image">
+                            <img src="img/SoloPlugin.png" alt="SoloPlugin" class="work-img">
+                            <div class="work-overlay">
+                                <a href="https://github.com/LaoBiDeng321/SoloPlugin" class="view-btn" target="_blank" rel="noopener noreferrer">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <span>查看源码</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="work-info">
+                            <div class="work-meta">
+                                <span class="work-category">浏览器插件</span>
+                                <span class="work-year">2026</span>
+                            </div>
+                            <h3 class="work-title">SoloPlugin</h3>
+                            <p class="work-desc">为防止 Web 开发时插件干扰而开发的浏览器扩展工具。</p>
+                        </div>
+                    </article>
+
+                    <!-- Firefly 流萤主题博客 -->
+                    <article class="work-card" data-work="4">
+                        <div class="work-image">
+                            <img src="img/firefly.png" alt="Firefly Blog" class="work-img">
+                            <div class="work-overlay">
+                                <a href="https://firefly-blog-lbd.netlify.app/" class="view-btn" target="_blank" rel="noopener noreferrer">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <span>查看博客</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="work-info">
+                            <div class="work-meta">
+                                <span class="work-category">博客主题</span>
+                                <span class="work-year">2026</span>
+                            </div>
+                            <h3 class="work-title">Firefly 主题博客</h3>
+                            <p class="work-desc">流萤主题的个人博客，融合二次元美学与现代设计。</p>
+                        </div>
+                    </article>
+
+                    <!-- Some AI Projects -->
+                    <article class="work-card" data-work="5">
+                        <div class="work-image">
+                            <img src="img/someAIproject.png" alt="Some AI Projects" class="work-img">
+                            <div class="work-overlay">
+                                <a href="https://laobideng321.github.io/LBD-Some_AI_projects/index.html" class="view-btn" target="_blank" rel="noopener noreferrer">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <span>在线预览</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="work-info">
+                            <div class="work-meta">
+                                <span class="work-category">AI 工具集</span>
+                                <span class="work-year">2025</span>
+                            </div>
+                            <h3 class="work-title">Some AI Projects</h3>
+                            <p class="work-desc">一些非系统化的 AI 工具集合，探索人工智能的实用场景。</p>
+                        </div>
+                    </article>
+
+                    <!-- MC Mod -->
+                    <article class="work-card" data-work="6">
+                        <div class="work-image">
+                            <img src="img/MCmod.png" alt="MC Mod" class="work-img">
+                            <div class="work-overlay">
+                                <button class="view-btn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                    <span>开发中</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="work-info">
+                            <div class="work-meta">
+                                <span class="work-category">游戏模组</span>
+                                <span class="work-year">2026</span>
+                            </div>
+                            <h3 class="work-title">MC Java 模组</h3>
+                            <p class="work-desc">使用 AI 辅助开发的 Minecraft 1.20.1 Java 版模组。</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: 技能专长 -->
+        <section class="section section-skills" data-section="3">
+            <div class="section-bg">
+                <div class="gradient-orb orb-5"></div>
+            </div>
+            <div class="section-content">
+                <div class="section-header centered">
+                    <span class="section-tag">技能探索</span>
+                    <h2 class="section-title">我在学什么</h2>
+                    <p class="section-desc">借助 AI 的力量，正在探索的设计与开发技能</p>
+                </div>
+                <div class="skills-simple">
+                    <div class="skill-group">
+                        <h3>AI 工具</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Trae</span>
+                            <span class="skill-tag">Kimi-K2.5</span>
+                            <span class="skill-tag">MinMax2.0</span>
+                            <span class="skill-tag">OpenClaw</span>
+                            <span class="skill-tag">Gemini</span>
+                            <span class="skill-tag">Stable Diffusion</span>
+                        </div>
+                    </div>
+                    <div class="skill-group">
+                        <h3>开发</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">HTML/CSS</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">响应式设计</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: 联系方式 -->
+        <section class="section section-contact" data-section="4">
+            <div class="section-bg">
+                <div class="gradient-orb orb-6"></div>
+                <div class="gradient-orb orb-7"></div>
+            </div>
+            <div class="section-content">
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <div class="section-header">
+                            <span class="section-tag">联系方式</span>
+                            <h2 class="section-title">一起交流</h2>
+                            <p class="section-desc">
+                                对 AI 创作感兴趣？或有想法想要探讨？<br>
+                                欢迎随时找我聊天，一起学习成长。
+                            </p>
+                        </div>
+                        <div class="contact-notice" style="background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-6); max-width: 320px;">
+                            <p style="font-size: var(--text-sm); color: var(--text-secondary); margin: 0;">
+                                表单功能暂未正式接入，请通过邮箱或社交链接联系我。
+                            </p>
+                        </div>
+                        <div class="contact-links">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                        <polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                </div>
+                                <div class="contact-detail">
+                                    <span class="contact-label">邮箱</span>
+                                    <span class="contact-value">3097914916@qq.com</span>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                </div>
+                                <div class="contact-detail">
+                                    <span class="contact-label">地址</span>
+                                    <span class="contact-value">中国 · 无锡</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="social-links">
+                            <a href="https://github.com/LaoBiDeng321?tab=repositories" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                            </a>
+                            <a href="https://qm.qq.com/q/KiQ52QUqyu" class="social-link" aria-label="QQ" target="_blank" rel="noopener noreferrer">
+                                <svg viewBox="0 0 1024 1024" fill="currentColor"><path d="M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.6 53.8 11.4 19.3 196.2 12.3 249.5 6.3 53.3 6 238.1 13 249.5-6.3 14.1-23.8-45.3-45.7-71.6-53.8 54.6-46.2 79.8-110.1 79.8-159 0 0 52.1 84.6 70.1 82.4 8.5-1.1 19.5-46.4-14.5-155.8z"/></svg>
+                            </a>
+                            <a href="https://space.bilibili.com/3546689231128952?spm_id_from=333.1007.0.0" class="social-link" aria-label="哔哩哔哩" target="_blank" rel="noopener noreferrer">
+                                <svg viewBox="0 0 1024 1024" fill="currentColor"><path d="M977.2 208.2c33.4 36.2 48.8 79.4 46.6 131.4v404.8c-0.8 52.8-18.4 96.2-53 130.2-34.4 34-78.2 51.8-131 53.4H184.04c-52.9-1.6-96.42-19.6-130.56-54.4C19.364 838.8 1.534 793 0 736.4V339.6c1.534-52 19.364-95.2 53.48-131.4 34.14-32.7 77.66-50.66 130.56-52.2h58.76l-50.7-51.62c-11.5-11.46-17.26-26-17.26-43.58 0-17.6 5.76-32.12 17.26-43.594C203.6 5.736 218.2 0 235.8 0s32.2 5.736 43.8 17.206L426.2 156h176l149-138.794C763.4 5.736 778.4 0 796 0c17.6 0 32.2 5.736 43.8 17.206C851.2 28.68 857 43.2 857 60.8c0 17.58-5.8 32.12-17.2 43.58L789.2 156h58.6c52.8 1.54 96 19.5 129.4 52.2z m-77.6 139.4c-0.8-19.2-7.4-34.8-21.4-47-10.4-12.2-28-18.8-45.4-19.6H192.1c-19.18 0.8-34.9 7.4-47.16 19.6-12.28 12.2-18.8 27.8-19.56 47v388.8c0 18.4 6.52 34 19.56 47S173.7 803 192.1 803h640.7c18.4 0 34-6.6 46.6-19.6 12.6-13 19.4-28.6 20.2-47V347.6zM371 433c12.6 12.6 19.4 28.2 20.2 46.4V546c-0.8 18.4-7.4 33.8-19.6 46.4-12.4 12.6-28 19-47.2 19-19.2 0-35-6.4-47.2-19-12.2-12.6-18.8-28-19.6-46.4v-66.6c0.8-18.2 7.6-33.8 20.2-46.4 12.6-12.6 26.4-19.2 46.6-20 18.4 0.8 34 7.4 46.6 20z m383 0c12.6 12.6 19.4 28.2 20.2 46.4V546c-0.8 18.4-7.4 33.8-19.6 46.4-12.2 12.6-28 19-47.2 19-19.2 0-34.8-6.4-47.2-19-14-12.6-18.8-28-19.4-46.4v-66.6c0.6-18.2 7.4-33.8 20-46.4 12.6-12.6 28.2-19.2 46.6-20 18.4 0.8 34 7.4 46.6 20z"/></svg>
+                            </a>
+                            <a href="https://www.douyin.com/user/MS4wLjABAAAACHaf2XzPefKsB7Phg_r4qaBmFis3GPhRfWmGEKdBHo4?from_tab_name=main&is_search=0&list_name=fans&nt=0" class="social-link" aria-label="抖音" target="_blank" rel="noopener noreferrer">
+                                <svg viewBox="0 0 1024 1024" fill="currentColor"><path d="M937.4 423.9c-84 0-165.7-27.3-232.9-77.8v352.3c0 179.9-138.6 325.6-309.6 325.6S85.3 878.3 85.3 698.4c0-179.9 138.6-325.6 309.6-325.6 17.1 0 33.7 1.5 49.9 4.3v186.6c-15.5-6.1-32-9.2-48.6-9.2-76.3 0-138.2 65-138.2 145.3 0 80.2 61.9 145.3 138.2 145.3 76.2 0 138.1-65.1 138.1-145.3V0H707c0 134.5 103.7 243.5 231.6 243.5v180.3l-1.2 0.1"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="contact-form-wrapper">
+                        <form class="contact-form" id="contactForm">
+                            <div class="form-group">
+                                <label for="name">姓名</label>
+                                <input type="text" id="name" name="name" placeholder="请输入您的姓名" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">邮箱</label>
+                                <input type="email" id="email" name="email" placeholder="请输入您的邮箱" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">主题</label>
+                                <input type="text" id="subject" name="subject" placeholder="请输入邮件主题">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">留言</label>
+                                <textarea id="message" name="message" rows="4" placeholder="请输入您的留言内容..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-full">
+                                <span>发送消息</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"/>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <footer class="section-footer">
+                <p>MIT License &copy; 2026 LaoBiDeng321.</p>
+                <p>用 AI 探索创造的无限可能</p>
+            </footer>
+        </section>
+    </main>
+
+    <script src="js/fullpage.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
