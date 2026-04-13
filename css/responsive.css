@@ -149,6 +149,11 @@
         text-align: center !important;
     }
     
+    /* 关于我页面 - 隐藏 highlights */
+    .about-highlights {
+        display: none !important;
+    }
+    
     .skills-simple {
         gap: var(--space-4);
     }
