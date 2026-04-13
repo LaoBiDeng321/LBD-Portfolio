@@ -94,9 +94,14 @@
         display: none;
     }
     
-    /* Section headers - 简化 */
+    /* Section headers - 简化，全部左对齐 */
     .section-header {
         margin-bottom: var(--space-6);
+        text-align: left !important;
+    }
+    
+    .section-header .section-tag {
+        justify-content: flex-start !important;
     }
     
     .section-title {
@@ -105,6 +110,7 @@
     
     .section-desc {
         font-size: var(--text-sm);
+        text-align: left !important;
     }
     
     /* Works - 单列简化 */
@@ -130,7 +136,19 @@
         display: none;
     }
     
-    /* Skills - 简化 */
+    /* Skills - 简化，保持居中 */
+    .section-skills .section-header {
+        text-align: center !important;
+    }
+    
+    .section-skills .section-header .section-tag {
+        justify-content: center !important;
+    }
+    
+    .section-skills .section-desc {
+        text-align: center !important;
+    }
+    
     .skills-simple {
         gap: var(--space-4);
     }
