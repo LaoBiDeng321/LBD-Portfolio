@@ -49,7 +49,6 @@ class FullPageScroll {
      */
     init() {
         if (!this.container || this.totalSections === 0) {
-            console.warn('FullPageScroll: No container or sections found');
             return;
         }
 
@@ -79,7 +78,7 @@ class FullPageScroll {
         try {
             localStorage.setItem('fullpage_current_section', index.toString());
         } catch (e) {
-            console.warn('FullPageScroll: Failed to save section to localStorage', e);
+            // 忽略存储错误
         }
     }
 
@@ -97,7 +96,7 @@ class FullPageScroll {
                 }
             }
         } catch (e) {
-            console.warn('FullPageScroll: Failed to load section from localStorage', e);
+            // 忽略读取错误
         }
         return 0;
     }

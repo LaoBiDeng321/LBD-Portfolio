@@ -298,23 +298,90 @@
 
 /* Touch devices - 简化交互 */
 @media (pointer: coarse) {
+    .work-card {
+        position: relative;
+    }
+    
     .work-overlay {
-        opacity: 1;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 60%);
+        opacity: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 70%);
         align-items: flex-end;
         padding: var(--space-3);
+        transition: opacity 0.3s ease;
+    }
+    
+    .work-card:active .work-overlay,
+    .work-card:focus-within .work-overlay {
+        opacity: 1;
     }
     
     .view-btn {
-        transform: translateY(0);
+        transform: translateY(10px);
         width: 100%;
         justify-content: center;
         padding: var(--space-2) var(--space-4);
         font-size: var(--text-sm);
+        transition: transform 0.3s ease;
+    }
+    
+    .work-card:active .view-btn,
+    .work-card:focus-within .view-btn {
+        transform: translateY(0);
     }
     
     .scroll-hint {
         display: none;
+    }
+    
+    /* 小屏导航按钮 */
+    .mobile-nav {
+        position: fixed;
+        right: var(--space-4);
+        bottom: var(--space-20);
+        display: none;
+        flex-direction: column;
+        gap: var(--space-2);
+        z-index: 100;
+    }
+    
+    /* 移动设备显示导航按钮 */
+    body.is-mobile .mobile-nav {
+        display: flex;
+    }
+    
+    .mobile-nav-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: var(--radius-full);
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--text-primary);
+    }
+    
+    .mobile-nav-btn:hover {
+        background: var(--glass-bg-hover);
+        border-color: var(--glass-border-hover);
+    }
+    
+    .mobile-nav-btn:active {
+        transform: scale(0.95);
+    }
+    
+    .mobile-nav-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .mobile-nav-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
     }
 }
 

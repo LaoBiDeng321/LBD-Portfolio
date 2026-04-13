@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 监听全屏滚动事件
     initFullPageEvents();
+    
+    // 初始化小屏导航按钮
+    initMobileNav();
 });
 
 /**
@@ -115,7 +118,6 @@ function initContactForm() {
             }, 2500);
         }, 1500);
 
-        console.log('Form submitted (not connected):', data);
     });
 }
 
@@ -193,7 +195,6 @@ function initWorkCards() {
  */
 function showWorkDetail(workId) {
     // 作品详情通过链接直接跳转，无需弹窗
-    console.log('Work detail:', workId);
 }
 
 /**
@@ -202,8 +203,7 @@ function showWorkDetail(workId) {
 function initFullPageEvents() {
     // 章节变化事件
     document.addEventListener('fullpage:sectionChange', (e) => {
-        const { currentIndex, prevIndex, direction } = e.detail;
-        console.log(`Section changed from ${prevIndex} to ${currentIndex} (${direction})`);
+        const { currentIndex } = e.detail;
         
         // 更新头部样式
         updateHeaderStyle(currentIndex);
@@ -216,6 +216,59 @@ function initFullPageEvents() {
         // 触发章节内动画
         triggerSectionAnimations(currentIndex);
     });
+}
+
+/**
+ * 检测是否为移动设备
+ */
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+/**
+ * 初始化小屏导航按钮
+ */
+function initMobileNav() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (!prevBtn || !nextBtn) return;
+    
+    // 如果不是移动设备，不初始化
+    if (!isMobileDevice()) return;
+    
+    // 添加移动设备标识
+    document.body.classList.add('is-mobile');
+    
+    // 更新按钮状态
+    function updateButtonState() {
+        if (!window.fullpage) return;
+        const currentIndex = window.fullpage.state.currentIndex;
+        const totalSections = window.fullpage.totalSections;
+        
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === totalSections - 1;
+    }
+    
+    // 上一页
+    prevBtn.addEventListener('click', () => {
+        if (window.fullpage) {
+            window.fullpage.scroll(-1);
+        }
+    });
+    
+    // 下一页
+    nextBtn.addEventListener('click', () => {
+        if (window.fullpage) {
+            window.fullpage.scroll(1);
+        }
+    });
+    
+    // 监听页面变化更新按钮状态
+    document.addEventListener('fullpage:sectionChange', updateButtonState);
+    
+    // 初始状态
+    setTimeout(updateButtonState, 100);
 }
 
 /**

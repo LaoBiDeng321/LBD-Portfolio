@@ -95,7 +95,7 @@ class ThemeManager {
         try {
             localStorage.setItem('theme', theme);
         } catch (e) {
-            console.warn('Unable to store theme preference');
+            // 忽略存储错误
         }
     }
 
