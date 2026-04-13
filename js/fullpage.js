@@ -14,13 +14,13 @@ class FullPageScroll {
             activeClass: 'active',
             prevClass: 'prev',
             nextClass: 'next',
-            transitionDuration: 400,
-            scrollThreshold: 50,
-            touchThreshold: 50,
+            transitionDuration: 500,
+            scrollThreshold: 80,
+            touchThreshold: 80,
             keyboardNavigation: true,
             loop: false,
             // 支持内部滚动的区域选择器
-            scrollableSections: ['.section-works'],
+            scrollableSections: ['.section-works', '.section-about'],
             ...options
         };
 
@@ -65,9 +65,17 @@ class FullPageScroll {
     }
 
     /**
-     * 保存当前页面位置到 localStorage
+     * 检查是否为大屏设备
+     */
+    isLargeScreen() {
+        return window.innerWidth >= 1024;
+    }
+
+    /**
+     * 保存当前页面位置到 localStorage（仅大屏）
      */
     saveSection(index) {
+        if (!this.isLargeScreen()) return;
         try {
             localStorage.setItem('fullpage_current_section', index.toString());
         } catch (e) {
@@ -76,9 +84,10 @@ class FullPageScroll {
     }
 
     /**
-     * 从 localStorage 读取保存的页面位置
+     * 从 localStorage 读取保存的页面位置（仅大屏）
      */
     loadSavedSection() {
+        if (!this.isLargeScreen()) return 0;
         try {
             const saved = localStorage.getItem('fullpage_current_section');
             if (saved !== null) {
@@ -126,12 +135,17 @@ class FullPageScroll {
                     const scrollHeight = scrollableContent.scrollHeight;
                     const clientHeight = scrollableContent.clientHeight;
                     
+                    // 如果内容没有溢出，不需要滚动
+                    if (scrollHeight <= clientHeight) {
+                        return false;
+                    }
+                    
                     if (direction > 0) {
-                        // 向下滚动：检查是否到达底部
-                        return scrollTop + clientHeight < scrollHeight - 5;
+                        // 向下滚动：检查是否到达底部（使用更大的阈值）
+                        return scrollTop + clientHeight < scrollHeight - 10;
                     } else {
-                        // 向上滚动：检查是否到达顶部
-                        return scrollTop > 5;
+                        // 向上滚动：检查是否到达顶部（使用更大的阈值）
+                        return scrollTop > 10;
                     }
                 }
             }
@@ -148,7 +162,7 @@ class FullPageScroll {
 
         // 触摸事件
         this.container.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: true });
-        this.container.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: true });
+        this.container.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
         this.container.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: true });
 
         // 键盘事件
@@ -199,20 +213,59 @@ class FullPageScroll {
 
         // 检查是否在可滚动区域内
         if (this.isInScrollableArea(e.target)) {
-            // 如果可以继续在该区域内滚动，则不阻止默认行为
-            if (this.canScrollInArea(Math.sign(e.deltaY))) {
-                return;
+            const scrollableContent = this.getCurrentScrollableContent();
+            if (scrollableContent) {
+                const scrollTop = scrollableContent.scrollTop;
+                const scrollHeight = scrollableContent.scrollHeight;
+                const clientHeight = scrollableContent.clientHeight;
+                const deltaY = e.deltaY;
+                
+                // 检查是否在顶部或底部边界
+                const isAtTop = scrollTop <= 10;
+                const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+                
+                // 如果在可滚动区域内，且不在边界，允许原生滚动
+                if ((deltaY > 0 && !isAtBottom) || (deltaY < 0 && !isAtTop)) {
+                    return;
+                }
+                
+                // 在边界时，累积滚动值以判断是否切换页面
+                if ((deltaY > 0 && isAtBottom) || (deltaY < 0 && isAtTop)) {
+                    this.state.wheelDelta += deltaY;
+                    this.state.wheelDelta = Math.max(-150, Math.min(150, this.state.wheelDelta));
+                    
+                    // 达到阈值才触发页面切换
+                    if (Math.abs(this.state.wheelDelta) >= this.config.scrollThreshold) {
+                        e.preventDefault();
+                        if (!this.state.isScrolling && timeDiff >= this.config.transitionDuration + 200) {
+                            const direction = this.state.wheelDelta > 0 ? 1 : -1;
+                            this.scroll(direction);
+                            this.state.wheelDelta = 0;
+                            this.state.lastScrollTime = now;
+                        }
+                    } else {
+                        e.preventDefault();
+                    }
+                    
+                    clearTimeout(this.wheelTimeout);
+                    this.wheelTimeout = setTimeout(() => {
+                        this.state.wheelDelta = 0;
+                    }, 250);
+                    return;
+                }
             }
         }
 
         e.preventDefault();
 
-        // 滚动锁定，防止快速连续滚动
-        if (this.state.isScrolling || timeDiff < this.config.transitionDuration + 100) {
+        // 滚动锁定，防止快速连续滚动 - 增加冷却时间
+        if (this.state.isScrolling || timeDiff < this.config.transitionDuration + 200) {
             return;
         }
 
+        // 累积滚轮增量，但限制最大累积值
         this.state.wheelDelta += e.deltaY;
+        this.state.wheelDelta = Math.max(-150, Math.min(150, this.state.wheelDelta));
 
         // 达到阈值才触发滚动
         if (Math.abs(this.state.wheelDelta) >= this.config.scrollThreshold) {
@@ -222,11 +275,26 @@ class FullPageScroll {
             this.state.lastScrollTime = now;
         }
 
-        // 重置 wheelDelta
+        // 重置 wheelDelta - 增加延迟时间
         clearTimeout(this.wheelTimeout);
         this.wheelTimeout = setTimeout(() => {
             this.state.wheelDelta = 0;
-        }, 150);
+        }, 250);
+    }
+
+    /**
+     * 获取当前可滚动内容区域
+     */
+    getCurrentScrollableContent() {
+        const currentSection = this.sections[this.state.currentIndex];
+        if (!currentSection) return null;
+
+        for (const selector of this.config.scrollableSections) {
+            if (currentSection.matches(selector)) {
+                return currentSection.querySelector('.section-content');
+            }
+        }
+        return null;
     }
 
     /**
@@ -243,6 +311,17 @@ class FullPageScroll {
     handleTouchMove(e) {
         if (!this.state.isTouching) return;
         this.state.touchEndY = e.touches[0].clientY;
+        
+        // 如果在可滚动区域内，允许原生滚动行为
+        const touch = e.touches[0];
+        const element = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (element && this.isInScrollableArea(element)) {
+            const diff = this.state.touchStartY - this.state.touchEndY;
+            // 只有当不能继续滚动时才阻止默认行为
+            if (!this.canScrollInArea(Math.sign(diff))) {
+                e.preventDefault();
+            }
+        }
     }
 
     /**
@@ -254,6 +333,14 @@ class FullPageScroll {
         this.state.isTouching = false;
 
         if (this.state.isScrolling) return;
+
+        const now = Date.now();
+        const timeDiff = now - this.state.lastScrollTime;
+        
+        // 增加冷却时间检查
+        if (timeDiff < this.config.transitionDuration + 200) {
+            return;
+        }
 
         // 检查触摸点是否在可滚动区域内
         const touch = e.changedTouches[0];
@@ -268,9 +355,11 @@ class FullPageScroll {
 
         const diff = this.state.touchStartY - this.state.touchEndY;
 
+        // 增加触摸距离阈值判断
         if (Math.abs(diff) >= this.config.touchThreshold) {
             const direction = diff > 0 ? 1 : -1;
             this.scroll(direction);
+            this.state.lastScrollTime = now;
         }
     }
 
@@ -489,11 +578,11 @@ class FullPageScroll {
 // 自动初始化
 document.addEventListener('DOMContentLoaded', () => {
     window.fullpage = new FullPageScroll({
-        transitionDuration: 400,
-        scrollThreshold: 50,
-        touchThreshold: 50,
+        transitionDuration: 500,
+        scrollThreshold: 80,
+        touchThreshold: 80,
         keyboardNavigation: true,
         loop: false,
-        scrollableSections: ['.section-works']
+        scrollableSections: ['.section-works', '.section-about']
     });
 });
