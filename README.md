@@ -21,14 +21,14 @@
 
 ## 项目列表
 
-| 项目 | 类型 | 年份 |
-|------|------|------|
-| SimpleNAVY | 网页设计 | 2026 |
-| OtherShore Game Studio | 网页设计 | 2026 |
-| SoloPlugin | 浏览器插件 | 2026 |
-| Firefly 主题博客 | 博客主题 | 2026 |
-| Some AI Projects | AI 工具集 | 2025 |
-| MC Java 模组 | 游戏模组 | 2026 |
+| 项目 | 类型 | 年份 | 链接 |
+|------|------|------|------|
+| SimpleNAVY | 网页设计 | 2026 | [访问](https://simplenavy.online/) |
+| OtherShore Game Studio | 网页设计 | 2026 | [访问](https://simplenavy.online/othershoregamestudio/) |
+| SoloPlugin | 浏览器插件 | 2026 | [源码](https://github.com/LaoBiDeng321/SoloPlugin) |
+| Firefly 主题博客 | 博客主题 | 2026 | [访问](https://firefly-blog-lbd.netlify.app/) |
+| Some AI Projects | AI 工具集 | 2025 | [预览](https://laobideng321.github.io/LBD-Some_AI_projects/index.html) |
+| MC Java 模组 | 游戏模组 | 2026 | 开发中 |
 
 ## 社交链接
 
