@@ -2,6 +2,21 @@
    Responsive Styles - Mobile First
    ============================================ */
 
+/* Extra large screens */
+@media (min-width: 1700px) {
+    .about-grid {
+        gap: var(--space-20);
+    }
+    
+    .about-visual {
+        width: 400px;
+    }
+    
+    .about-content-wrapper {
+        width: 800px;
+    }
+}
+
 /* Large screens */
 @media (max-width: 1400px) {
     .works-grid {
@@ -16,12 +31,13 @@
     }
     
     .about-grid {
-        grid-template-columns: 1fr;
+        flex-direction: column;
         gap: var(--space-6);
     }
     
     .about-visual {
         order: -1;
+        width: auto;
     }
     
     .profile-card {

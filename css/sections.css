@@ -103,23 +103,26 @@
     max-height: calc(100vh - 140px);
     overflow-y: auto;
     padding-right: var(--space-4);
-    margin-right: calc(-1 * var(--space-4));
+    padding-left: var(--space-4);
 }
 
 .about-grid {
-    display: grid;
-    grid-template-columns: 360px 1fr;
+    display: flex;
     gap: var(--space-16);
     align-items: start;
+    justify-content: center;
 }
 
 .about-visual {
     display: flex;
     justify-content: center;
+    flex-shrink: 0;
+    width: 360px;
 }
 
 .about-content-wrapper {
-    max-width: 600px;
+    width: 720px;
+    max-width: 100%;
 }
 
 .about-content-scroll {
