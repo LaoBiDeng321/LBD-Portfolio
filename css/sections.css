@@ -46,10 +46,14 @@
     font-weight: 700;
     line-height: 1.1;
     margin-bottom: var(--space-6);
+    transform-style: preserve-3d;
+    perspective: 1000px;
 }
 
 .title-line {
     display: block;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .title-line:last-child {
@@ -62,17 +66,30 @@
     max-width: 600px;
     margin-bottom: var(--space-10);
     line-height: 1.8;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .hero-actions {
     display: flex;
     gap: var(--space-4);
     margin-bottom: var(--space-16);
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 .hero-stats {
     display: flex;
     gap: var(--space-12);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .stat-item {
@@ -118,11 +135,30 @@
     justify-content: center;
     flex-shrink: 0;
     width: 360px;
+    padding-top: 200px;
+    padding-bottom: 200px;
 }
 
 .about-content-wrapper {
     width: 720px;
     max-width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.section-tag {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+.section-title {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+.section-desc {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .about-content-scroll {
@@ -157,6 +193,11 @@
     font-size: var(--text-base);
     color: var(--text-secondary);
     line-height: 1.8;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .about-highlights {
@@ -176,6 +217,13 @@
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-xl);
     transition: all 200ms ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.highlight-item.parallax-enabled {
+    transition: transform 0.1s ease-out, border-color 200ms ease;
+    will-change: transform;
 }
 
 .highlight-item:hover {
@@ -193,6 +241,8 @@
     border-radius: var(--radius-lg);
     color: var(--accent-primary);
     flex-shrink: 0;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .highlight-icon svg {
@@ -205,11 +255,18 @@
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: var(--space-1);
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .highlight-content p {
     font-size: var(--text-sm);
     color: var(--text-tertiary);
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 /* ============================================
@@ -267,10 +324,44 @@
    Skills Section
    ============================================ */
 
+.skills-simple {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+.skill-group h3 {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
 .skills-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--space-6);
+}
+
+/* ============================================
+   Contact Section
+   ============================================ */
+
+.contact-label {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+.contact-value {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+.contact-notice p {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
+.section-footer p {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 /* ============================================

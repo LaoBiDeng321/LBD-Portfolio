@@ -323,33 +323,6 @@
         position: relative;
     }
     
-    .work-overlay {
-        opacity: 0;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 70%);
-        align-items: flex-end;
-        padding: var(--space-3);
-        transition: opacity 0.3s ease;
-    }
-    
-    .work-card:active .work-overlay,
-    .work-card:focus-within .work-overlay {
-        opacity: 1;
-    }
-    
-    .view-btn {
-        transform: translateY(10px);
-        width: 100%;
-        justify-content: center;
-        padding: var(--space-2) var(--space-4);
-        font-size: var(--text-sm);
-        transition: transform 0.3s ease;
-    }
-    
-    .work-card:active .view-btn,
-    .work-card:focus-within .view-btn {
-        transform: translateY(0);
-    }
-    
     .scroll-hint {
         display: none;
     }
@@ -414,6 +387,34 @@
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+}
+
+/* Work Detail Modal - Mobile */
+@media (max-width: 640px) {
+    .work-detail-modal {
+        padding: var(--space-4);
+    }
+
+    .work-detail-modal-content {
+        padding: var(--space-6);
+        max-width: 100%;
+    }
+
+    .work-detail-title {
+        font-size: var(--text-xl);
+    }
+
+    .work-detail-description {
+        font-size: var(--text-sm);
+    }
+
+    .work-detail-actions {
+        flex-direction: column;
+    }
+
+    .work-detail-actions .btn {
+        width: 100%;
     }
 }
 

@@ -122,6 +122,13 @@
     overflow: hidden;
     transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.work-card.parallax-enabled {
+    transition: transform 0.1s ease-out, box-shadow 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
 }
 
 .work-card:hover {
@@ -149,6 +156,11 @@
     transform: scale(1.05);
 }
 
+.work-card.parallax-enabled .work-img {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
+}
+
 .work-image .image-placeholder {
     width: 100%;
     height: 100%;
@@ -168,44 +180,6 @@
 
 .work-image .image-placeholder span {
     font-size: var(--text-sm);
-}
-
-.work-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 300ms ease;
-}
-
-.work-card:hover .work-overlay {
-    opacity: 1;
-}
-
-.view-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    padding: var(--space-3) var(--space-5);
-    background: var(--bg-elevated);
-    color: var(--text-primary);
-    border-radius: var(--radius-full);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    transform: translateY(20px);
-    transition: all 300ms ease;
-}
-
-.view-btn svg {
-    width: 16px;
-    height: 16px;
-}
-
-.work-card:hover .view-btn {
-    transform: translateY(0);
 }
 
 .work-info {
@@ -263,6 +237,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.profile-card.parallax-enabled {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .profile-image {
@@ -272,40 +253,19 @@
     margin: 0 auto var(--space-6);
 }
 
-.profile-image .profile-avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
+.profile-card.parallax-enabled .profile-image {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
-.profile-image .image-placeholder {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: var(--bg-tertiary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
+.profile-card.parallax-enabled .profile-avatar {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
-.profile-image .image-placeholder svg {
-    width: 64px;
-    height: 64px;
-}
-
-.profile-ring {
-    position: absolute;
-    inset: -8px;
-    border: 2px dashed var(--border-strong);
-    border-radius: 50%;
-    animation: rotate 20s linear infinite;
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.profile-card.parallax-enabled .profile-ring {
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .profile-info h3 {
@@ -313,11 +273,15 @@
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: var(--space-1);
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .profile-info p {
     font-size: var(--text-base);
     color: var(--text-secondary);
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 /* ============================================
@@ -437,6 +401,13 @@
     font-weight: 500;
     color: var(--text-primary);
     transition: all 200ms ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.skill-tag.parallax-enabled {
+    transition: transform 0.1s ease-out, background 200ms ease, border-color 200ms ease;
+    will-change: transform;
 }
 
 .skill-tag:hover {
@@ -457,6 +428,13 @@
     border-radius: var(--radius-xl);
     transition: all 200ms ease;
     max-width: 320px;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.contact-item.parallax-enabled {
+    transition: transform 0.1s ease-out, background 200ms ease;
+    will-change: transform;
 }
 
 .contact-item:hover {
@@ -473,6 +451,13 @@
     border-radius: var(--radius-lg);
     color: var(--accent-primary);
     transition: all 200ms ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.contact-icon.parallax-enabled {
+    transition: transform 0.1s ease-out, background 200ms ease, color 200ms ease;
+    will-change: transform;
 }
 
 .contact-item:hover .contact-icon {
@@ -483,6 +468,8 @@
 .contact-icon svg {
     width: 20px;
     height: 20px;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .contact-detail {
@@ -520,6 +507,13 @@
     border-radius: var(--radius-lg);
     color: var(--text-secondary);
     transition: all 200ms ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.social-link.parallax-enabled {
+    transition: transform 0.1s ease-out, background 200ms ease, color 200ms ease;
+    will-change: transform;
 }
 
 .social-link:hover {
@@ -531,6 +525,8 @@
 .social-link svg {
     width: 20px;
     height: 20px;
+    transition: transform 0.1s ease-out;
+    will-change: transform;
 }
 
 .contact-form-wrapper {
@@ -540,6 +536,129 @@
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-2xl);
     padding: var(--space-8);
+}
+
+/* ============================================
+   Work Detail Modal
+   ============================================ */
+
+.work-detail-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 300ms ease;
+}
+
+.work-detail-modal.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.work-detail-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.work-detail-modal-content {
+    position: relative;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-8);
+    max-width: 500px;
+    width: 100%;
+    transform: translateY(20px) scale(0.95);
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--glass-shadow), 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.work-detail-modal.visible .work-detail-modal-content {
+    transform: translateY(0) scale(1);
+}
+
+.work-detail-modal-close {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.work-detail-modal-close:hover {
+    background: var(--border-strong);
+    color: var(--text-primary);
+    transform: rotate(90deg);
+}
+
+.work-detail-modal-close svg {
+    width: 18px;
+    height: 18px;
+}
+
+.work-detail-modal-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.work-detail-category {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-primary);
+    padding: var(--space-1) var(--space-2);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+}
+
+.work-detail-year {
+    font-size: var(--text-xs);
+    color: var(--text-tertiary);
+}
+
+.work-detail-title {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+}
+
+.work-detail-description {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-6);
+}
+
+.work-detail-actions {
+    display: flex;
+    gap: var(--space-3);
+}
+
+.work-detail-actions .btn {
+    flex: 1;
 }
 
 /* ============================================
