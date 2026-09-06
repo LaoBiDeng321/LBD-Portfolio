@@ -23,8 +23,8 @@
 
 | 项目 | 类型 | 年份 | 链接 |
 |------|------|------|------|
-| SimpleNAVY | 网页设计 | 2026 | [访问](https://simplenavy.online/) |
-| OtherShore Game Studio | 网页设计 | 2026 | [访问](https://simplenavy.online/othershoregamestudio/) |
+| SimpleNAVY | 网页设计 | 2026 | [访问](https://simplenavy.netlify.app/) |
+| OtherShore Game Studio | 网页设计 | 2026 | [访问](https://simplenavy.netlify.app/othershoregamestudio/) |
 | SoloPlugin | 浏览器插件 | 2026 | [源码](https://github.com/LaoBiDeng321/SoloPlugin) |
 | Firefly 主题博客 | 博客主题 | 2026 | [访问](https://firefly-blog-lbd.netlify.app/) |
 | ShShu 桌面宠物 | 桌面宠物 | 2026 | [源码](https://github.com/LaoBiDeng321/shshu_desktop_pet) |
