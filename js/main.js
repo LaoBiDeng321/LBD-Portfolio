@@ -101,7 +101,7 @@
             soloplugin: 'extension',
             firefly: 'blog',
             aiprojects: 'ai',
-            mcmod: 'mod'
+            endfieldskill: 'skill'
         };
         return map[id] || 'web';
     }

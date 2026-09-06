@@ -57,13 +57,12 @@ window.SITE = {
             linkKey: 'works.viewPreview'
         },
         {
-            id: 'mcmod',
+            id: 'endfieldskill',
             year: '2026',
             color: 'orange',
-            image: 'img/MCmod.webp',
-            link: null, // 开发中，暂无线上地址
-            preview: null,
-            linkKey: 'works.wip'
+            link: 'https://github.com/LaoBiDeng321/Endfield-Style-Skill',
+            previewImg: 'https://opengraph.githubassets.com/1/LaoBiDeng321/Endfield-Style-Skill', // github.com deny iframe，用官方自动预览图
+            linkKey: 'works.viewCode'
         }
     ],
 
