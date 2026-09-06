@@ -1,10 +1,15 @@
 /* ============================================
-   Base Styles
+   Base Styles — Endfield Industrial
    ============================================ */
 
 body {
     min-height: 100vh;
     overflow: hidden;
+    /* 工程网格背景：72px，透明度 ≤0.03 */
+    background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 72px 72px;
 }
 
 /* ============================================
@@ -36,7 +41,7 @@ body {
     opacity: 0;
     visibility: hidden;
     transform: translateY(100px);
-    transition: opacity var(--transition-slow), 
+    transition: opacity var(--transition-slow),
                 transform var(--transition-slow),
                 visibility var(--transition-slow);
     will-change: transform, opacity;
@@ -61,7 +66,8 @@ body {
 }
 
 /* ============================================
-   Section Background
+   Section Background — 替代渐变 orb
+   仅保留克制的网格分区与角落注记
    ============================================ */
 
 .section-bg {
@@ -72,115 +78,54 @@ body {
     pointer-events: none;
 }
 
-.gradient-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.6;
-    animation: orb-float 20s ease-in-out infinite;
-}
-
-.orb-1 {
-    width: 600px;
-    height: 600px;
-    background: var(--orb-1);
-    top: -200px;
-    left: -100px;
-    animation-delay: 0s;
-}
-
-.orb-2 {
-    width: 500px;
-    height: 500px;
-    background: var(--orb-2);
-    bottom: -150px;
-    right: -100px;
-    animation-delay: -7s;
-}
-
-.orb-3 {
-    width: 400px;
-    height: 400px;
-    background: var(--orb-3);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation-delay: -14s;
-}
-
-.orb-4 {
-    width: 700px;
-    height: 700px;
-    background: var(--orb-1);
-    top: -300px;
-    right: -200px;
-    animation-delay: -3s;
-}
-
-.orb-5 {
-    width: 500px;
-    height: 500px;
-    background: var(--orb-2);
-    bottom: -200px;
-    left: -150px;
-    animation-delay: -10s;
-}
-
-.orb-6 {
-    width: 600px;
-    height: 600px;
-    background: var(--orb-1);
-    top: -200px;
-    left: 30%;
-    animation-delay: -5s;
-}
-
-.orb-7 {
-    width: 400px;
-    height: 400px;
-    background: var(--orb-3);
-    bottom: -100px;
-    right: 20%;
-    animation-delay: -12s;
-}
-
-@keyframes orb-float {
-    0%, 100% {
-        transform: translate(0, 0) scale(1);
-    }
-    25% {
-        transform: translate(30px, -30px) scale(1.05);
-    }
-    50% {
-        transform: translate(-20px, 20px) scale(0.95);
-    }
-    75% {
-        transform: translate(20px, 30px) scale(1.02);
-    }
-}
-
 .grid-pattern {
     position: absolute;
     inset: 0;
-    background-image: 
-        linear-gradient(var(--border-medium) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border-medium) 1px, transparent 1px);
-    background-size: 60px 60px;
-    opacity: 0.3;
-    mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+    background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 72px 72px;
+    opacity: 1;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+}
+
+/* 右缘竖排注记（HUD） */
+.hud-vertical-note {
+    position: absolute;
+    top: 50%;
+    right: var(--space-4);
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* 左下坐标/状态等宽读数（HUD） */
+.hud-readout {
+    position: absolute;
+    left: var(--space-8);
+    bottom: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    user-select: none;
+}
+
+.hud-readout .hud-accent {
+    color: var(--color-accent);
 }
 
 /* ============================================
-   Mobile Navigation - 默认隐藏
-   ============================================ */
-
-.mobile-nav {
-    display: none;
-}
-
-/* ============================================
-   Section Header
+   Section Header — 序号大字 + 等宽注记 + 短杠
    ============================================ */
 
 .section-header {
@@ -195,11 +140,12 @@ body {
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
+    font-family: var(--font-mono);
     font-size: var(--text-sm);
-    font-weight: 500;
+    font-weight: 400;
     color: var(--text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.18em;
     margin-bottom: var(--space-4);
 }
 
@@ -207,22 +153,42 @@ body {
     content: '';
     width: 24px;
     height: 2px;
-    background: var(--accent-primary);
+    background: var(--color-accent);
 }
 
-.section-header.centered .section-tag {
-    justify-content: center;
+/* 序号大字：描边空心数字（section-header 内的 index） */
+.section-index {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--border-medium);
+    user-select: none;
+    margin-bottom: var(--space-2);
 }
 
-.section-header.centered .section-tag::before {
-    width: 32px;
+/* 标题下的 72px 强调色短杠 */
+.section-title::after {
+    content: '';
+    display: block;
+    width: 72px;
+    height: 3px;
+    background: var(--color-accent);
+    margin-top: var(--space-4);
+}
+
+.section-header.centered .section-title::after {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .section-title {
     font-size: var(--text-4xl);
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-2);
 }
 
 .section-desc {
@@ -234,4 +200,92 @@ body {
 
 .section-header.centered .section-desc {
     margin: 0 auto;
+}
+
+/* ============================================
+   Corner Markers — L 形角标刻线（通用工具类）
+   卡片左上/右下 2px 实线角标，悬停微移
+   ============================================ */
+
+.corner-marks {
+    position: relative;
+}
+
+.corner-marks::before,
+.corner-marks::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    transition: transform var(--transition-base), opacity var(--transition-base);
+    opacity: 0.55;
+}
+
+/* 左上角标 */
+.corner-marks::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid var(--color-accent);
+    border-left: 2px solid var(--color-accent);
+}
+
+/* 右下角标 */
+.corner-marks::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid var(--color-accent);
+    border-right: 2px solid var(--color-accent);
+}
+
+.corner-marks:hover::before {
+    transform: translate(-3px, -3px);
+    opacity: 1;
+}
+
+.corner-marks:hover::after {
+    transform: translate(3px, 3px);
+    opacity: 1;
+}
+
+/* ============================================
+   Hazard Stripe — 黄黑警示条纹点缀
+   ============================================ */
+
+.hazard-stripe {
+    height: 6px;
+    background: var(--stripe);
+    opacity: 0.9;
+}
+
+/* ============================================
+   Viewport Frame — 视口四角取景刻线（HUD）
+   ============================================ */
+
+.hud-frame {
+    position: fixed;
+    inset: 10px;
+    pointer-events: none;
+    z-index: var(--z-fixed);
+}
+
+.hud-frame span {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: 0 solid var(--border-strong);
+    opacity: 0.8;
+}
+
+.hud-frame .hud-tl { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+.hud-frame .hud-tr { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+.hud-frame .hud-bl { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+.hud-frame .hud-br { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* ============================================
+   Mobile Navigation — 默认隐藏
+   ============================================ */
+
+.mobile-nav {
+    display: none;
 }

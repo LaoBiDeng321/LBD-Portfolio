@@ -102,7 +102,6 @@ ul, ol {
 
 ::-webkit-scrollbar-thumb {
     background: var(--border-medium);
-    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

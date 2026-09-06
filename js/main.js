@@ -1,864 +1,490 @@
 /**
- * Main Application
- * 主要交互逻辑
+ * Main Application — Endfield Edition
+ * 渲染（配置+i18n 驱动）/ 弹窗（强制选择）/ Toast（堆叠）/ 视差（精简）
  */
+(function () {
+    'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 初始化头部滚动效果
-    initHeaderScroll();
-    
-    // 初始化技能条动画
-    initSkillBars();
-    
-    // 初始化表单处理
-    initContactForm();
-    
-    // 初始化作品卡片交互
-    initWorkCards();
-    
-    // 监听全屏滚动事件
-    initFullPageEvents();
-    
-    // 初始化小屏导航按钮
-    initMobileNav();
-    
-    // 初始化鼠标视差效果
-    initParallaxEffect();
-});
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/**
- * 头部滚动效果
- */
-function initHeaderScroll() {
-    const header = document.querySelector('.main-header');
-    if (!header) return;
+    /* ============================================
+       动态渲染
+       ============================================ */
 
-    let lastScroll = 0;
-    
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-        
-        if (currentScroll > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-        
-        lastScroll = currentScroll;
-    }, { passive: true });
-}
+    /** 卡片内 2K 实时帧等比压缩（内嵌视口 2560x1600） */
+    function fitCardFrame(box, frame) {
+        frame.style.transform = 'scale(' + (box.clientWidth / 2560) + ')';
+    }
 
-/**
- * 技能条动画
- */
-function initSkillBars() {
-    const skillSection = document.querySelector('.section-skills');
-    if (!skillSection) return;
+    /** 作品卡片：数据来自 SITE.works，文案来自 i18n 字典 */
+    function renderWorks() {
+        var grid = document.getElementById('worksGrid');
+        if (!grid) return;
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const progressBars = entry.target.querySelectorAll('.skill-progress');
-                progressBars.forEach((bar, index) => {
-                    setTimeout(() => {
-                        bar.style.width = bar.style.getPropertyValue('--progress');
-                    }, index * 100);
+        grid.innerHTML = '';
+        window.SITE.works.forEach(function (work, i) {
+            var card = document.createElement('article');
+            card.className = 'work-card corner-marks';
+            card.dataset.workIndex = String(i);
+            if (work.color) card.dataset.color = work.color;
+
+            var index = String(i + 1).padStart(2, '0');
+            var category = window.I18N.t('works.cat.' + categoryKey(work.id));
+            var title = window.I18N.t('works.' + work.id + '.title');
+            var desc = window.I18N.t('works.' + work.id + '.desc');
+
+            var info =
+                '<div class="work-info">' +
+                    '<div class="work-meta">' +
+                        '<span class="work-category">' + category + '</span>' +
+                        '<span class="work-year">' + work.year + '</span>' +
+                    '</div>' +
+                    '<h3 class="work-title">' + title + '</h3>' +
+                    '<p class="work-desc">' + desc + '</p>' +
+                '</div>';
+
+            var indexSpan = '<span class="work-index">' + index + '</span>';
+
+            if (work.preview) {
+                // 实时渲染：工业占位层垫底（不依赖本地快照），2K 帧加载完成后淡出
+                var box = document.createElement('div');
+                box.className = 'work-image';
+                box.innerHTML = indexSpan;
+
+                var ph = window.Preview.buildPlaceholder('SYNC.WAIT');
+                box.appendChild(ph);
+
+                var frame = document.createElement('iframe');
+                frame.className = 'work-frame';
+                frame.src = work.preview;
+                frame.title = work.id;
+                frame.loading = 'lazy';
+                frame.tabIndex = -1;
+                frame.setAttribute('aria-hidden', 'true');
+                frame.addEventListener('load', function () {
+                    setTimeout(function () {
+                        frame.classList.add('loaded');
+                        // 移除占位层：远端页面比例不定，透明背景会透出占位层
+                        window.Preview.dismissPlaceholder(ph);
+                    }, 350);
                 });
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.3 });
+                box.appendChild(frame);
 
-    observer.observe(skillSection);
-}
+                if (window.ResizeObserver) {
+                    var ro = new ResizeObserver(function () {
+                        fitCardFrame(box, frame);
+                    });
+                    ro.observe(box);
+                }
+                fitCardFrame(box, frame);
 
-/**
- * 联系表单处理
- */
-function initContactForm() {
-    const form = document.getElementById('contactForm');
-    if (!form) return;
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData);
-
-        // 模拟提交 - 暂未接入，总是显示失败
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `
-            <span>发送中...</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="60">
-                    <animate attributeName="stroke-dashoffset" from="60" to="0" dur="1s" repeatCount="indefinite"/>
-                </circle>
-            </svg>
-        `;
-
-        setTimeout(() => {
-            // 显示发送失败提示
-            submitBtn.innerHTML = `
-                <span>发送失败</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="15" y1="9" x2="9" y2="15"/>
-                    <line x1="9" y1="9" x2="15" y2="15"/>
-                </svg>
-            `;
-            submitBtn.style.background = '#ef4444';
-
-            // 显示提示信息
-            showToast('表单功能暂未接入，请通过邮箱联系我');
-
-            setTimeout(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-                submitBtn.style.background = '';
-            }, 2500);
-        }, 1500);
-
-    });
-}
-
-/**
- * 显示提示信息
- */
-function showToast(message) {
-    const existingToast = document.querySelector('.toast-message');
-    if (existingToast) {
-        existingToast.remove();
-    }
-
-    const toast = document.createElement('div');
-    toast.className = 'toast-message';
-    toast.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; margin-right: 8px; flex-shrink: 0;">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="16" x2="12" y2="12"/>
-            <line x1="12" y1="8" x2="12.01" y2="8"/>
-        </svg>
-        <span>${message}</span>
-    `;
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 100px;
-        left: 50%;
-        transform: translateX(-50%) translateY(100px);
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid var(--glass-border);
-        color: var(--text-primary);
-        padding: 14px 24px;
-        border-radius: 100px;
-        font-size: 14px;
-        font-weight: 500;
-        z-index: 9999;
-        opacity: 0;
-        transition: all 300ms ease;
-        display: flex;
-        align-items: center;
-        box-shadow: var(--glass-shadow);
-    `;
-
-    document.body.appendChild(toast);
-
-    requestAnimationFrame(() => {
-        toast.style.opacity = '1';
-        toast.style.transform = 'translateX(-50%) translateY(0)';
-    });
-
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(-50%) translateY(100px)';
-        setTimeout(() => toast.remove(), 300);
-    }, 4000);
-}
-
-/**
- * 作品卡片交互
- */
-function initWorkCards() {
-    const cards = document.querySelectorAll('.work-card');
-    
-    cards.forEach(card => {
-        card.addEventListener('click', () => {
-            const workId = card.dataset.work;
-            showWorkDetail(workId);
-        });
-    });
-}
-
-/**
- * 显示作品详情
- */
-function showWorkDetail(workId) {
-    const workData = {
-        1: {
-            title: 'SimpleNAVY',
-            category: '网页设计',
-            year: '2026',
-            description: '帮助朋友开发的游戏设计的宣传网页，展示游戏特色与玩法。',
-            link: 'https://simplenavy.online/',
-            linkText: '查看项目'
-        },
-        2: {
-            title: 'OtherShore Game Studio',
-            category: '网页设计',
-            year: '2026',
-            description: '朋友创建的游戏工作室官网，展示团队作品与信息。',
-            link: 'https://simplenavy.online/othershoregamestudio/',
-            linkText: '查看项目'
-        },
-        3: {
-            title: 'SoloPlugin',
-            category: '浏览器插件',
-            year: '2026',
-            description: '为防止 Web 开发时插件干扰而开发的浏览器扩展工具。',
-            link: 'https://github.com/LaoBiDeng321/SoloPlugin',
-            linkText: '查看源码'
-        },
-        4: {
-            title: 'Firefly 主题博客',
-            category: '博客主题',
-            year: '2026',
-            description: '流萤主题的个人博客，融合二次元美学与现代设计。',
-            link: 'https://firefly-blog-lbd.netlify.app/',
-            linkText: '查看博客'
-        },
-        5: {
-            title: 'Some AI Projects',
-            category: 'AI 工具集',
-            year: '2025',
-            description: '一些非系统化的 AI 工具集合，探索人工智能的实用场景。',
-            link: 'https://laobideng321.github.io/LBD-Some_AI_projects/index.html',
-            linkText: '在线预览'
-        },
-        6: {
-            title: 'MC Java 模组',
-            category: '游戏模组',
-            year: '2026',
-            description: '使用 AI 辅助开发的 Minecraft 1.20.1 Java 版模组。',
-            link: null,
-            linkText: '开发中'
-        }
-    };
-
-    const work = workData[workId];
-    if (!work) return;
-
-    showWorkDetailModal(work);
-}
-
-/**
- * 显示作品详情确认弹窗
- */
-function showWorkDetailModal(work) {
-    const existingModal = document.querySelector('.work-detail-modal');
-    if (existingModal) {
-        existingModal.remove();
-    }
-
-    const modal = document.createElement('div');
-    modal.className = 'work-detail-modal';
-    modal.innerHTML = `
-        <div class="work-detail-modal-overlay"></div>
-        <div class="work-detail-modal-content">
-            <button class="work-detail-modal-close" aria-label="关闭">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-            </button>
-            <div class="work-detail-modal-header">
-                <span class="work-detail-category">${work.category}</span>
-                <span class="work-detail-year">${work.year}</span>
-            </div>
-            <h3 class="work-detail-title">${work.title}</h3>
-            <p class="work-detail-description">${work.description}</p>
-            <div class="work-detail-actions">
-                ${work.link ? `
-                    <a href="${work.link}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-                        <span>${work.linkText}</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                            <polyline points="15 3 21 3 21 9"/>
-                            <line x1="10" y1="14" x2="21" y2="3"/>
-                        </svg>
-                    </a>
-                ` : `
-                    <button class="btn btn-secondary" disabled>
-                        <span>${work.linkText}</span>
-                    </button>
-                `}
-                <button class="btn btn-secondary work-detail-modal-cancel">
-                    <span>再看看</span>
-                </button>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    requestAnimationFrame(() => {
-        modal.classList.add('visible');
-    });
-
-    const closeBtn = modal.querySelector('.work-detail-modal-close');
-    const cancelBtn = modal.querySelector('.work-detail-modal-cancel');
-    const overlay = modal.querySelector('.work-detail-modal-overlay');
-
-    const closeModal = () => {
-        modal.classList.remove('visible');
-        setTimeout(() => modal.remove(), 300);
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    overlay.addEventListener('click', closeModal);
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && document.body.contains(modal)) {
-            closeModal();
-        }
-    });
-}
-
-/**
- * 全屏滚动事件监听
- */
-function initFullPageEvents() {
-    let headerTimeout;
-    
-    // 章节变化事件
-    document.addEventListener('fullpage:sectionChange', (e) => {
-        const { currentIndex } = e.detail;
-        
-        // 显示导航栏
-        showHeader();
-        
-        // 清除之前的定时器
-        clearTimeout(headerTimeout);
-        
-        // 2 秒后隐藏导航栏
-        headerTimeout = setTimeout(() => {
-            hideHeader();
-        }, 2000);
-        
-        // 更新头部样式
-        updateHeaderStyle(currentIndex);
-    });
-
-    // 滚动结束事件
-    document.addEventListener('fullpage:scrollEnd', (e) => {
-        const { currentIndex } = e.detail;
-        
-        // 触发章节内动画
-        triggerSectionAnimations(currentIndex);
-    });
-}
-
-/**
- * 初始化小屏导航按钮
- */
-function initMobileNav() {
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    
-    if (!prevBtn || !nextBtn) return;
-    
-    // 如果不是移动设备，不初始化
-    if (!isMobileDevice()) return;
-    
-    // 添加移动设备标识
-    document.body.classList.add('is-mobile');
-    
-    // 更新按钮状态
-    function updateButtonState() {
-        if (!window.fullpage) return;
-        const currentIndex = window.fullpage.state.currentIndex;
-        const totalSections = window.fullpage.totalSections;
-        
-        prevBtn.disabled = currentIndex === 0;
-        nextBtn.disabled = currentIndex === totalSections - 1;
-    }
-    
-    // 上一页
-    prevBtn.addEventListener('click', () => {
-        if (window.fullpage) {
-            window.fullpage.scroll(-1);
-        }
-    });
-    
-    // 下一页
-    nextBtn.addEventListener('click', () => {
-        if (window.fullpage) {
-            window.fullpage.scroll(1);
-        }
-    });
-    
-    // 监听页面变化更新按钮状态
-    document.addEventListener('fullpage:sectionChange', updateButtonState);
-    
-    // 初始状态
-    setTimeout(updateButtonState, 100);
-}
-
-/**
- * 显示导航栏
- */
-function showHeader() {
-    const header = document.querySelector('.main-header');
-    if (!header) return;
-    
-    header.classList.add('visible');
-}
-
-/**
- * 隐藏导航栏
- */
-function hideHeader() {
-    const header = document.querySelector('.main-header');
-    if (!header) return;
-    
-    header.classList.remove('visible');
-}
-
-/**
- * 更新头部样式
- */
-function updateHeaderStyle(sectionIndex) {
-    const header = document.querySelector('.main-header');
-    if (!header) return;
-    
-    // 根据章节调整头部样式
-    if (sectionIndex === 0) {
-        header.style.background = 'transparent';
-        header.style.backdropFilter = 'none';
-    } else {
-        header.style.background = '';
-        header.style.backdropFilter = '';
-    }
-}
-
-// 页面加载时显示导航栏
-window.addEventListener('load', () => {
-    showHeader();
-    setTimeout(() => {
-        hideHeader();
-    }, 2000);
-});
-
-/**
- * 触发章节内动画
- */
-function triggerSectionAnimations(sectionIndex) {
-    const section = document.querySelector(`.section[data-section="${sectionIndex}"]`);
-    if (!section) return;
-    
-    // 添加动画类
-    const animatedElements = section.querySelectorAll('.skill-progress, .work-card, .highlight-item');
-    animatedElements.forEach((el, index) => {
-        setTimeout(() => {
-            el.style.animation = 'fadeInUp 0.6s ease forwards';
-        }, index * 50);
-    });
-}
-
-/**
- * 平滑滚动到指定元素
- */
-function scrollToElement(selector) {
-    const element = document.querySelector(selector);
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-    }
-}
-
-/**
- * 节流函数
- */
-function throttle(func, limit) {
-    let inThrottle;
-    return function(...args) {
-        if (!inThrottle) {
-            func.apply(this, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-}
-
-/**
- * 防抖函数
- */
-function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-}
-
-// 导出工具函数
-window.utils = {
-    scrollToElement,
-    throttle,
-    debounce,
-    showWorkDetail
-};
-
-/**
- * 检测是否为移动设备
- */
-function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
-/**
- * 检测是否为 PC 设备
- */
-function isPCDevice() {
-    return !isMobileDevice();
-}
-
-/**
- * 初始化鼠标视差效果（仅 PC 端）
- */
-function initParallaxEffect() {
-    // 仅在 PC 端启用视差效果
-    if (!isPCDevice()) return;
-    
-    const sections = document.querySelectorAll('.section');
-    
-    sections.forEach(section => {
-        // 为每个章节单独处理视差效果
-        initSectionParallax(section);
-    });
-}
-
-/**
- * 为单个章节初始化视差效果
- */
-function initSectionParallax(section) {
-    // 收集所有需要视差效果的元素
-    const parallaxElements = [];
-    
-    // 标题类元素
-    const titleLines = section.querySelectorAll('.title-line');
-    titleLines.forEach((line, index) => {
-        parallaxElements.push({ element: line, depth: 15 + index * 5 });
-    });
-    
-    // 副标题
-    const subtitle = section.querySelector('.hero-subtitle');
-    if (subtitle) {
-        parallaxElements.push({ element: subtitle, depth: 8 });
-    }
-    
-    // 首页按钮
-    const heroBtns = section.querySelectorAll('.hero-actions .btn');
-    heroBtns.forEach((btn, index) => {
-        parallaxElements.push({ element: btn, depth: 6 + index * 2, isCard: true });
-        
-        // 为按钮内的 SVG 添加视差效果（较小的深度）
-        const btnSvg = btn.querySelector('svg');
-        if (btnSvg) {
-            parallaxElements.push({ element: btnSvg, depth: 4 + index, isCardChild: true });
-        }
-        
-        // 为按钮内的文字添加视差效果
-        const btnText = btn.querySelector('span');
-        if (btnText) {
-            parallaxElements.push({ element: btnText, depth: 5 + index });
-        }
-    });
-    
-    // 统计数字
-    const statItems = section.querySelectorAll('.stat-item');
-    statItems.forEach((item, index) => {
-        parallaxElements.push({ element: item, depth: 5 + index * 2 });
-    });
-    
-    // 章节标签和标题
-    const sectionTag = section.querySelector('.section-tag');
-    if (sectionTag) {
-        parallaxElements.push({ element: sectionTag, depth: 10 });
-    }
-    
-    const sectionTitle = section.querySelector('.section-title');
-    if (sectionTitle) {
-        parallaxElements.push({ element: sectionTitle, depth: 12 });
-    }
-    
-    const sectionDesc = section.querySelector('.section-desc');
-    if (sectionDesc) {
-        parallaxElements.push({ element: sectionDesc, depth: 6 });
-    }
-    
-    // 段落文本
-    const paragraphs = section.querySelectorAll('.about-text p, .highlight-content p');
-    paragraphs.forEach((p, index) => {
-        parallaxElements.push({ element: p, depth: 4 + (index % 3) * 2 });
-    });
-    
-    // 高亮标题
-    const highlightTitles = section.querySelectorAll('.highlight-content h4');
-    highlightTitles.forEach((h4, index) => {
-        parallaxElements.push({ element: h4, depth: 7 + index * 2 });
-    });
-    
-    // 技能组标题
-    const skillGroupTitles = section.querySelectorAll('.skill-group h3');
-    skillGroupTitles.forEach((h3, index) => {
-        parallaxElements.push({ element: h3, depth: 8 + index * 2 });
-    });
-    
-    // 技能标签容器
-    const skillTagsContainers = section.querySelectorAll('.skill-tags');
-    skillTagsContainers.forEach((container, index) => {
-        parallaxElements.push({ element: container, depth: 6 + index });
-    });
-    
-    // 技能标签（单独处理）
-    const skillTags = section.querySelectorAll('.skill-tag');
-    skillTags.forEach((tag, index) => {
-        parallaxElements.push({ element: tag, depth: 7 + (index % 6) * 2, isCard: true });
-    });
-    
-    // 联系信息
-    const contactLabels = section.querySelectorAll('.contact-label');
-    contactLabels.forEach((label, index) => {
-        parallaxElements.push({ element: label, depth: 4 + index * 2 });
-    });
-    
-    const contactValues = section.querySelectorAll('.contact-value');
-    contactValues.forEach((value, index) => {
-        parallaxElements.push({ element: value, depth: 6 + index * 2 });
-    });
-    
-    // 联系提示框
-    const contactNotice = section.querySelector('.contact-notice');
-    if (contactNotice) {
-        parallaxElements.push({ element: contactNotice, depth: 5, isCard: true });
-        const noticeText = contactNotice.querySelector('p');
-        if (noticeText) {
-            parallaxElements.push({ element: noticeText, depth: 4 });
-        }
-    }
-    
-    // 联系条目
-    const contactItems = section.querySelectorAll('.contact-item');
-    contactItems.forEach((item, index) => {
-        parallaxElements.push({ element: item, depth: 6 + index * 2, isCard: true });
-        
-        // 为图标添加视差效果
-        const contactIcon = item.querySelector('.contact-icon');
-        if (contactIcon) {
-            parallaxElements.push({ element: contactIcon, depth: 10 + index * 2, isCardChild: true });
-            
-            // 为图标内的 SVG 添加视差效果
-            const iconSvg = contactIcon.querySelector('svg');
-            if (iconSvg) {
-                parallaxElements.push({ element: iconSvg, depth: 12 + index * 2, isCardChild: true });
-            }
-        }
-    });
-    
-    // 社交链接
-    const socialLinks = section.querySelectorAll('.social-link');
-    socialLinks.forEach((link, index) => {
-        parallaxElements.push({ element: link, depth: 8 + index * 2, isCard: true });
-        
-        // 为链接内的 SVG 添加视差效果
-        const linkSvg = link.querySelector('svg');
-        if (linkSvg) {
-            parallaxElements.push({ element: linkSvg, depth: 10 + index * 2, isCardChild: true });
-        }
-    });
-    
-    // 表单元素
-    const formGroups = section.querySelectorAll('.form-group');
-    formGroups.forEach((group, index) => {
-        parallaxElements.push({ element: group, depth: 5 + index * 2 });
-        
-        const label = group.querySelector('label');
-        if (label) {
-            parallaxElements.push({ element: label, depth: 4 + index * 2 });
-        }
-        
-        const input = group.querySelector('input, textarea');
-        if (input) {
-            parallaxElements.push({ element: input, depth: 6 + index * 2 });
-        }
-    });
-    
-    // 表单按钮
-    const formBtn = section.querySelector('.contact-form .btn');
-    if (formBtn) {
-        parallaxElements.push({ element: formBtn, depth: 8, isCard: true });
-        const btnText = formBtn.querySelector('span');
-        if (btnText) {
-            parallaxElements.push({ element: btnText, depth: 7 });
-        }
-        const btnSvg = formBtn.querySelector('svg');
-        if (btnSvg) {
-            parallaxElements.push({ element: btnSvg, depth: 5, isCardChild: true });
-        }
-    }
-    
-    // 页脚文本
-    const footerTexts = section.querySelectorAll('.section-footer p');
-    footerTexts.forEach((p, index) => {
-        parallaxElements.push({ element: p, depth: 3 + index });
-    });
-    
-    // 作品卡片
-    const workCards = section.querySelectorAll('.work-card');
-    workCards.forEach((card, index) => {
-        // 为卡片本身添加视差效果
-        parallaxElements.push({ element: card, depth: 10 + index * 2, isCard: true });
-        
-        // 为卡片内的图片添加视差效果
-        const workImage = card.querySelector('.work-img');
-        if (workImage) {
-            parallaxElements.push({ element: workImage, depth: 15 + index * 2, isCardChild: true });
-        }
-        
-        // 为卡片内的分类标签添加视差效果
-        const workCategory = card.querySelector('.work-category');
-        if (workCategory) {
-            parallaxElements.push({ element: workCategory, depth: 12 + index * 2 });
-        }
-        
-        // 为卡片内的标题添加视差效果
-        const workTitle = card.querySelector('.work-title');
-        if (workTitle) {
-            parallaxElements.push({ element: workTitle, depth: 11 + index * 2 });
-        }
-        
-        // 为卡片内的描述添加视差效果
-        const workDesc = card.querySelector('.work-desc');
-        if (workDesc) {
-            parallaxElements.push({ element: workDesc, depth: 9 + index * 2 });
-        }
-    });
-    
-    // 关于页面的高亮卡片
-    const highlightItems = section.querySelectorAll('.highlight-item');
-    highlightItems.forEach((item, index) => {
-        // 为卡片本身添加视差效果
-        parallaxElements.push({ element: item, depth: 8 + index * 2, isCard: true });
-        
-        // 为图标添加视差效果
-        const highlightIcon = item.querySelector('.highlight-icon');
-        if (highlightIcon) {
-            parallaxElements.push({ element: highlightIcon, depth: 12 + index * 2, isCardChild: true });
-        }
-        
-        // 为图标内的 SVG 添加视差效果
-        const iconSvg = item.querySelector('.highlight-icon svg');
-        if (iconSvg) {
-            parallaxElements.push({ element: iconSvg, depth: 14 + index * 2, isCardChild: true });
-        }
-    });
-    
-    // 关于页面的个人资料卡片
-    const profileCard = section.querySelector('.profile-card');
-    if (profileCard) {
-        parallaxElements.push({ element: profileCard, depth: 10, isCard: true });
-        
-        // 为头像添加视差效果
-        const profileImage = profileCard.querySelector('.profile-avatar');
-        if (profileImage) {
-            parallaxElements.push({ element: profileImage, depth: 14, isCardChild: true });
-        }
-        
-        // 为外环添加视差效果
-        const profileRing = profileCard.querySelector('.profile-ring');
-        if (profileRing) {
-            parallaxElements.push({ element: profileRing, depth: 12, isCardChild: true });
-        }
-        
-        // 为姓名添加视差效果
-        const profileName = profileCard.querySelector('.profile-info h3');
-        if (profileName) {
-            parallaxElements.push({ element: profileName, depth: 11 });
-        }
-        
-        // 为职位添加视差效果
-        const profileRole = profileCard.querySelector('.profile-info p');
-        if (profileRole) {
-            parallaxElements.push({ element: profileRole, depth: 9 });
-        }
-    }
-    
-    if (parallaxElements.length === 0) return;
-    
-    let mouseX = 0;
-    let mouseY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    
-    // 监听鼠标移动
-    section.addEventListener('mousemove', (e) => {
-        const rect = section.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        // 计算鼠标位置相对于中心的偏移（归一化到 -1 到 1）
-        mouseX = (e.clientX - centerX) / (rect.width / 2);
-        mouseY = (e.clientY - centerY) / (rect.height / 2);
-    });
-    
-    // 离开时重置
-    section.addEventListener('mouseleave', () => {
-        mouseX = 0;
-        mouseY = 0;
-    });
-    
-    // 动画循环
-    function animate() {
-        // 平滑过渡
-        currentX += (mouseX - currentX) * 0.05;
-        currentY += (mouseY - currentY) * 0.05;
-        
-        // 为每个元素应用视差效果
-        parallaxElements.forEach(({ element, depth, isCard, isCardChild }) => {
-            // 检查元素是否还在 DOM 中
-            if (!document.contains(element)) return;
-            
-            if (isCard) {
-                // 卡片本身的视差效果
-                const x = currentX * depth;
-                const y = currentY * depth * 0.8;
-                element.classList.add('parallax-enabled');
-                element.style.transform = `translate(${x}px, ${y}px)`;
-            } else if (isCardChild) {
-                // 卡片子元素的视差效果（相对于卡片）
-                const x = currentX * depth;
-                const y = currentY * depth * 0.8;
-                element.style.transform = `translate(${x}px, ${y}px)`;
+                card.appendChild(box);
+                card.insertAdjacentHTML('beforeend', info);
             } else {
-                // 普通文本元素的视差效果
-                const x = currentX * depth;
-                const y = currentY * depth * 0.8;
-                element.style.transform = `translate(${x}px, ${y}px)`;
+                var src = work.previewImg || work.image;
+                card.innerHTML =
+                    '<div class="work-image">' +
+                        indexSpan +
+                        '<img src="' + src + '" alt="' + title + '" class="work-img' + (work.previewImg ? ' work-img-repo' : '') + '" loading="lazy" decoding="async">' +
+                    '</div>' +
+                    info;
             }
+            grid.appendChild(card);
         });
-        
-        requestAnimationFrame(animate);
     }
-    
-    animate();
-}
+
+    /** 作品分类的 i18n 键映射 */
+    function categoryKey(id) {
+        var map = {
+            simplenavy: 'web',
+            othershore: 'web',
+            soloplugin: 'extension',
+            firefly: 'blog',
+            aiprojects: 'ai',
+            mcmod: 'mod'
+        };
+        return map[id] || 'web';
+    }
+
+    /** 联系条目 + 社交链接（同源渲染到常规/横屏两组容器） */
+    function renderContactBlocks() {
+        var email = window.SITE.contact.email;
+        var emailSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>';
+        var locationSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+
+        var contactHTML =
+            '<div class="contact-item">' +
+                '<div class="contact-icon">' + emailSvg + '</div>' +
+                '<div class="contact-detail">' +
+                    '<span class="contact-label">' + window.I18N.t('contact.email.label') + '</span>' +
+                    '<span class="contact-value">' + email + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="contact-item">' +
+                '<div class="contact-icon">' + locationSvg + '</div>' +
+                '<div class="contact-detail">' +
+                    '<span class="contact-label">' + window.I18N.t('contact.location.label') + '</span>' +
+                    '<span class="contact-value">' + window.I18N.t('contact.location.value') + '</span>' +
+                '</div>' +
+            '</div>';
+
+        var socialHTML = window.SITE.socials.map(function (s) {
+            return '<a href="' + s.url + '" class="social-link" aria-label="' + s.label + '" target="_blank" rel="noopener noreferrer">' +
+                window.SITE.icons[s.id] + '</a>';
+        }).join('');
+
+        document.querySelectorAll('[data-render="contact-links"]').forEach(function (box) {
+            box.innerHTML = contactHTML;
+        });
+        document.querySelectorAll('[data-render="social-links"]').forEach(function (box) {
+            box.innerHTML = socialHTML;
+        });
+    }
+
+    /** 右缘刻度指示器：短横线 + 等宽序号 */
+    function renderIndicator(total) {
+        var box = document.getElementById('indicatorDots');
+        if (!box) return;
+        box.innerHTML = '';
+        for (var i = 0; i < total; i++) {
+            var dot = document.createElement('button');
+            dot.className = 'dot' + (i === 0 ? ' active' : '');
+            dot.dataset.index = String(i).padStart(2, '0');
+            dot.setAttribute('aria-label', String(i + 1));
+            (function (idx) {
+                dot.addEventListener('click', function () {
+                    if (window.fullpage) window.fullpage.goToSection(idx);
+                });
+            })(i);
+            box.appendChild(dot);
+        }
+    }
+
+    /* ============================================
+       Toast — 堆叠显示，新提示不覆盖旧提示
+       ============================================ */
+
+    function showToast(message) {
+        var stack = document.getElementById('toastStack');
+        if (!stack) return;
+
+        var toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.innerHTML =
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+                '<circle cx="12" cy="12" r="10"/>' +
+                '<line x1="12" y1="16" x2="12" y2="12"/>' +
+                '<line x1="12" y1="8" x2="12.01" y2="8"/>' +
+            '</svg><span></span>';
+        toast.querySelector('span').textContent = message;
+        stack.appendChild(toast);
+
+        requestAnimationFrame(function () {
+            toast.classList.add('show');
+        });
+
+        setTimeout(function () {
+            toast.classList.remove('show');
+            toast.classList.add('hide');
+            setTimeout(function () { toast.remove(); }, 300);
+        }, 4000);
+    }
+
+    /* ============================================
+       作品详情弹窗 — 强制选择
+       禁止点击遮罩/Escape 关闭；同级按钮等权重描边
+       ============================================ */
+
+    function showWorkDetail(workIndex) {
+        var work = window.SITE.works[workIndex];
+        if (!work) return;
+
+        // 旧弹窗先销毁（含 iframe 释放）
+        var existing = document.querySelector('.work-detail-modal');
+        if (existing) {
+            if (existing._destroy) existing._destroy();
+            existing.remove();
+        }
+
+        var modal = document.createElement('div');
+        modal.className = 'work-detail-modal';
+
+        var previewEl = window.Preview.build(work);
+
+        var linkBtnHTML;
+        if (work.link) {
+            var linkText = window.I18N.t(work.linkKey);
+            linkBtnHTML =
+                '<a href="' + work.link + '" class="btn btn-primary" target="_blank" rel="noopener noreferrer">' +
+                    '<span>' + linkText + '</span>' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+                        '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>' +
+                        '<polyline points="15 3 21 3 21 9"/>' +
+                        '<line x1="10" y1="14" x2="21" y2="3"/>' +
+                    '</svg>' +
+                '</a>';
+        } else {
+            linkBtnHTML = '<button class="btn btn-primary" disabled><span>' + window.I18N.t(work.linkKey) + '</span></button>';
+        }
+
+        modal.innerHTML =
+            '<div class="work-detail-modal-overlay"></div>' +
+            '<div class="work-detail-modal-content">' +
+                '<button class="work-detail-modal-close" aria-label="' + window.I18N.t('modal.close') + '">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+                        '<line x1="18" y1="6" x2="6" y2="18"/>' +
+                        '<line x1="6" y1="6" x2="18" y2="18"/>' +
+                    '</svg>' +
+                '</button>' +
+                '<div class="work-detail-modal-header">' +
+                    '<span class="work-detail-category">' + window.I18N.t('works.cat.' + categoryKey(work.id)) + '</span>' +
+                    '<span class="work-detail-year">' + work.year + '</span>' +
+                '</div>' +
+                '<h3 class="work-detail-title">' + window.I18N.t('works.' + work.id + '.title') + '</h3>' +
+                '<p class="work-detail-description">' + window.I18N.t('works.' + work.id + '.desc') + '</p>' +
+            '</div>';
+
+        // 预览区插入在描述之后、动作区之前；弹窗随作品信号色
+        var content = modal.querySelector('.work-detail-modal-content');
+        if (work.color) content.dataset.color = work.color;
+        content.appendChild(previewEl);
+
+        var actions = document.createElement('div');
+        actions.className = 'work-detail-actions';
+        actions.innerHTML = linkBtnHTML +
+            '<button class="btn btn-secondary work-detail-modal-cancel"><span>' + window.I18N.t('modal.stay') + '</span></button>';
+        content.appendChild(actions);
+
+        document.body.appendChild(modal);
+
+        // 关闭：销毁 iframe 释放资源
+        var closeBtn = modal.querySelector('.work-detail-modal-close');
+        var cancelBtn = modal.querySelector('.work-detail-modal-cancel');
+
+        var closeModal = function () {
+            if (modal._destroy) modal._destroy();
+            modal.classList.remove('visible');
+            setTimeout(function () { modal.remove(); }, 300);
+        };
+
+        modal._destroy = function () { previewEl.destroy(); };
+
+        // 强制选择：仅绑定明确控件（关闭按钮/再看看），遮罩与 Escape 均不响应
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        requestAnimationFrame(function () {
+            modal.classList.add('visible');
+        });
+    }
+
+    /* ============================================
+       头部与全屏联动
+       ============================================ */
+
+    var headerTimeout;
+
+    function initHeaderEvents() {
+        var header = document.querySelector('.main-header');
+        if (!header) return;
+
+        document.addEventListener('fullpage:sectionChange', function (e) {
+            var currentIndex = e.detail.currentIndex;
+            header.classList.add('visible');
+            clearTimeout(headerTimeout);
+            headerTimeout = setTimeout(function () {
+                header.classList.remove('visible');
+            }, 2000);
+            // 首屏透明顶栏，其余显示玻璃底
+            header.classList.toggle('transparent', currentIndex === 0);
+        });
+
+        document.addEventListener('fullpage:scrollEnd', function (e) {
+            triggerSectionAnimations(e.detail.currentIndex);
+        });
+
+        // 页面加载时先展示顶栏再收起
+        header.classList.add('visible');
+        setTimeout(function () {
+            header.classList.remove('visible');
+        }, 2000);
+    }
+
+    function triggerSectionAnimations(sectionIndex) {
+        var section = document.querySelector('.section[data-section="' + sectionIndex + '"]');
+        if (!section) return;
+        var animatedElements = section.querySelectorAll('.work-card, .highlight-item');
+        animatedElements.forEach(function (el, index) {
+            setTimeout(function () {
+                el.style.animation = 'fadeInUp 0.6s ease forwards';
+            }, index * 50);
+        });
+    }
+
+    /* ============================================
+       小屏导航按钮
+       ============================================ */
+
+    function initMobileNav() {
+        var prevBtn = document.getElementById('prevBtn');
+        var nextBtn = document.getElementById('nextBtn');
+        if (!prevBtn || !nextBtn) return;
+        if (!isMobileDevice()) return;
+
+        document.body.classList.add('is-mobile');
+
+        function updateButtonState() {
+            if (!window.fullpage) return;
+            var currentIndex = window.fullpage.state.currentIndex;
+            var totalSections = window.fullpage.totalSections;
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === totalSections - 1;
+        }
+
+        prevBtn.addEventListener('click', function () {
+            if (window.fullpage) window.fullpage.scroll(-1);
+        });
+        nextBtn.addEventListener('click', function () {
+            if (window.fullpage) window.fullpage.scroll(1);
+        });
+
+        document.addEventListener('fullpage:sectionChange', updateButtonState);
+        setTimeout(updateButtonState, 100);
+    }
+
+    /* ============================================
+       联系表单（未接入，明确反馈）
+       ============================================ */
+
+    function initContactForm() {
+        var form = document.getElementById('contactForm');
+        if (!form) return;
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var submitBtn = form.querySelector('button[type="submit"]');
+            var labelSpan = submitBtn.querySelector('span');
+
+            submitBtn.disabled = true;
+            labelSpan.textContent = window.I18N.t('contact.form.sending');
+
+            setTimeout(function () {
+                labelSpan.textContent = window.I18N.t('contact.form.fail');
+                showToast(window.I18N.t('contact.toast.fail'));
+
+                setTimeout(function () {
+                    submitBtn.disabled = false;
+                    labelSpan.textContent = window.I18N.t('contact.form.send');
+                }, 2500);
+            }, 1200);
+        });
+    }
+
+    /* ============================================
+       视差（精简版）：仅 hero 内容区整体微移
+       reduced-motion / 移动端 / 页面隐藏 时停用
+       ============================================ */
+
+    function initParallax() {
+        if (reducedMotion || !isPCDevice()) return;
+
+        var section = document.querySelector('.section-hero');
+        var target = section ? section.querySelector('.section-content') : null;
+        if (!target) return;
+
+        var mouseX = 0, mouseY = 0, currentX = 0, currentY = 0;
+
+        section.addEventListener('mousemove', function (e) {
+            var rect = section.getBoundingClientRect();
+            mouseX = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2);
+            mouseY = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2);
+        });
+
+        section.addEventListener('mouseleave', function () {
+            mouseX = 0;
+            mouseY = 0;
+        });
+
+        function animate() {
+            if (!document.hidden) {
+                currentX += (mouseX - currentX) * 0.05;
+                currentY += (mouseY - currentY) * 0.05;
+                target.style.transform = 'translate(' + (currentX * 8).toFixed(2) + 'px,' + (currentY * 6).toFixed(2) + 'px)';
+            }
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    }
+
+    /* ============================================
+       工具
+       ============================================ */
+
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    function isPCDevice() {
+        return !isMobileDevice();
+    }
+
+    /** 开屏后首屏逐个渐显（每项约 110ms） */
+    function initRevealOnBoot() {
+        var reveals = document.querySelectorAll('.section-hero .reveal');
+        document.addEventListener('loader:done', function () {
+            reveals.forEach(function (el, i) {
+                setTimeout(function () {
+                    el.classList.add('revealed');
+                }, i * 110);
+            });
+            // 顶栏淡入
+            var header = document.querySelector('.main-header');
+            if (header) header.classList.add('visible');
+        });
+    }
+
+    /* ============================================
+       初始化
+       ============================================ */
+
+    function init() {
+        window.I18N.init();
+        renderWorks();
+        renderContactBlocks();
+
+        var fullpage = window.fullpage;
+        if (fullpage) renderIndicator(fullpage.totalSections);
+
+        initHeaderEvents();
+        initContactForm();
+        initMobileNav();
+        initParallax();
+        initRevealOnBoot();
+
+        // 作品卡片点击：事件委托
+        var grid = document.getElementById('worksGrid');
+        if (grid) {
+            grid.addEventListener('click', function (e) {
+                var card = e.target.closest('.work-card');
+                if (card) showWorkDetail(parseInt(card.dataset.workIndex, 10));
+            });
+        }
+
+        // 语言切换：重渲染动态区
+        document.addEventListener('i18n:change', function () {
+            renderWorks();
+            renderContactBlocks();
+        });
+
+        // 暴露调试接口
+        window.utils = { showToast: showToast, showWorkDetail: showWorkDetail };
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();

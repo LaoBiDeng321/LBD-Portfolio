@@ -204,9 +204,22 @@ class FullPageScroll {
     }
 
     /**
+     * 开屏期间锁定输入：滚轮/键盘/触摸统一拦截
+     */
+    isBootLoading() {
+        return document.body.classList.contains('is-loading');
+    }
+
+    /**
      * 处理鼠标滚轮
      */
     handleWheel(e) {
+        // 开屏锁定
+        if (this.isBootLoading()) {
+            e.preventDefault();
+            return;
+        }
+
         const now = Date.now();
         const timeDiff = now - this.state.lastScrollTime;
 
@@ -308,6 +321,10 @@ class FullPageScroll {
      * 处理触摸移动
      */
     handleTouchMove(e) {
+        if (this.isBootLoading()) {
+            e.preventDefault();
+            return;
+        }
         if (!this.state.isTouching) return;
         this.state.touchEndY = e.touches[0].clientY;
         
@@ -327,6 +344,7 @@ class FullPageScroll {
      * 处理触摸结束
      */
     handleTouchEnd(e) {
+        if (this.isBootLoading()) return;
         if (!this.state.isTouching) return;
         
         this.state.isTouching = false;
@@ -366,6 +384,7 @@ class FullPageScroll {
      * 处理键盘事件
      */
     handleKeyboard(e) {
+        if (this.isBootLoading()) return;
         if (this.state.isScrolling) return;
 
         const currentSection = this.sections[this.state.currentIndex];
@@ -574,14 +593,13 @@ class FullPageScroll {
     }
 }
 
-// 自动初始化
-document.addEventListener('DOMContentLoaded', () => {
-    window.fullpage = new FullPageScroll({
-        transitionDuration: 500,
-        scrollThreshold: 80,
-        touchThreshold: 80,
-        keyboardNavigation: true,
-        loop: false,
-        scrollableSections: ['.section-works', '.section-about']
-    });
+// defer 脚本按文档顺序执行，此处 DOM 已完整，直接初始化
+// （main.js 依赖 window.fullpage 在其 init 时已存在）
+window.fullpage = new FullPageScroll({
+    transitionDuration: 500,
+    scrollThreshold: 80,
+    touchThreshold: 80,
+    keyboardNavigation: true,
+    loop: false,
+    scrollableSections: ['.section-works', '.section-about']
 });

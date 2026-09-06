@@ -390,6 +390,74 @@
     }
 }
 
+/* ============================================
+   Endfield HUD & Loader — Responsive
+   ============================================ */
+
+/* 中屏：隐藏取景刻线/竖排注记/坐标读数，避免拥挤 */
+@media (max-width: 1024px) {
+    .hud-frame,
+    .hud-vertical-note,
+    .hud-readout,
+    .loader-note {
+        display: none;
+    }
+
+    .section-index {
+        font-size: 2.5rem;
+    }
+
+    .hero-title {
+        font-size: clamp(2.25rem, 10vw, 3.5rem);
+    }
+
+    .title-line:last-child {
+        -webkit-text-stroke-color: var(--text-tertiary);
+    }
+
+    .loader-readout {
+        left: var(--space-5);
+        bottom: var(--space-8);
+    }
+
+    .loader-brand {
+        left: var(--space-5);
+    }
+
+    .loader-rec {
+        right: var(--space-5);
+    }
+
+    /* 弹窗预览条小屏换行 */
+    .work-preview-bar {
+        flex-wrap: wrap;
+    }
+
+    .work-preview-bar .preview-url {
+        flex-basis: 100%;
+        order: 3;
+    }
+}
+
+/* 超小屏：统计数字保持可见但收紧 */
+@media (max-width: 480px) {
+    .hero-stats {
+        gap: var(--space-6);
+    }
+
+    .stat-item {
+        min-width: 84px;
+    }
+
+    .stat-number {
+        font-size: var(--text-xl);
+    }
+
+    .section-title::after {
+        width: 48px;
+    }
+}
+
 /* Work Detail Modal - Mobile */
 @media (max-width: 640px) {
     .work-detail-modal {

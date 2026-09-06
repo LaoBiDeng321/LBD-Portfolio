@@ -1,5 +1,5 @@
 /* ============================================
-   Fullpage Scroll System
+   Fullpage Scroll System — Endfield
    ============================================ */
 
 /* Scroll Lock State */
@@ -29,35 +29,35 @@ body.scroll-locked {
     padding: var(--space-8);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(60px) scale(0.98);
-    transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1),
-                transform 400ms cubic-bezier(0.4, 0, 0.2, 1),
-                visibility 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(60px);
+    transition: opacity 400ms var(--ease-industrial),
+                transform 400ms var(--ease-industrial),
+                visibility 400ms var(--ease-industrial);
     will-change: transform, opacity, visibility;
 }
 
 .section.active {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
     z-index: 1;
 }
 
 .section.prev {
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-60px) scale(0.98);
+    transform: translateY(-60px);
 }
 
 .section.next {
     opacity: 0;
     visibility: hidden;
-    transform: translateY(60px) scale(0.98);
+    transform: translateY(60px);
 }
 
 /* Content Animation on Section Enter */
 .section.active .section-content > * {
-    animation: fadeInUp 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: fadeInUp 600ms var(--ease-industrial) forwards;
     opacity: 0;
 }
 
@@ -79,8 +79,21 @@ body.scroll-locked {
     }
 }
 
+/* 开屏后首屏元素逐个渐显（loader:done 触发，每项 110ms） */
+.reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 480ms var(--ease-industrial), transform 480ms var(--ease-industrial);
+}
+
+.reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* ============================================
-   Scroll Progress Indicator
+   Scroll Progress Indicator — 右缘短横线刻度
+   20px → 激活 32px 强调色
    ============================================ */
 
 .scroll-indicator {
@@ -91,77 +104,91 @@ body.scroll-locked {
     z-index: var(--z-fixed);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: var(--space-6);
+    align-items: flex-end;
+    gap: var(--space-5);
 }
 
 .indicator-track {
     position: absolute;
-    left: 50%;
+    right: 0;
     top: 0;
     bottom: 0;
-    width: 2px;
-    background: var(--border-medium);
-    transform: translateX(-50%);
-    border-radius: var(--radius-full);
+    width: 1px;
+    background: var(--border-light);
 }
 
 .indicator-progress {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
+    right: 0;
+    width: 1px;
     height: 0%;
-    background: var(--accent-primary);
-    border-radius: var(--radius-full);
-    transition: height 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--color-accent);
+    transition: height 400ms var(--ease-industrial);
 }
 
 .indicator-dots {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    align-items: flex-end;
+    gap: var(--space-5);
     list-style: none;
 }
 
+/* 短横线刻度，替换圆点 */
 .indicator-dots .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
+    width: 20px;
+    height: 2px;
     background: var(--border-strong);
-    border: 2px solid transparent;
+    border: none;
+    border-radius: 0;
     cursor: pointer;
-    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 300ms var(--ease-industrial), background 300ms ease;
     position: relative;
+    padding: 0;
 }
 
+/* 扩大点击热区 */
 .indicator-dots .dot::before {
     content: '';
     position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    border: 1px solid transparent;
-    transition: all 300ms ease;
+    inset: -8px 0;
 }
 
 .indicator-dots .dot:hover {
     background: var(--text-secondary);
-    transform: scale(1.2);
+    width: 26px;
 }
 
 .indicator-dots .dot.active {
-    background: var(--accent-primary);
-    transform: scale(1.3);
+    background: var(--color-accent);
+    width: 32px;
 }
 
-.indicator-dots .dot.active::before {
-    border-color: var(--accent-primary);
-    opacity: 0.3;
+/* 刻度旁等宽序号注记 */
+.indicator-dots .dot::after {
+    content: attr(data-index);
+    position: absolute;
+    right: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 200ms ease;
+}
+
+.indicator-dots .dot:hover::after,
+.indicator-dots .dot.active::after {
+    opacity: 1;
 }
 
 /* ============================================
-   Main Header
+   Main Header — 56px 固定顶栏
+   高透明底 + 高斯模糊，工业字标
    ============================================ */
 
 .main-header {
@@ -170,8 +197,12 @@ body.scroll-locked {
     left: 0;
     right: 0;
     z-index: var(--z-fixed);
-    padding: var(--space-4) var(--space-8);
-    transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1), opacity 400ms ease;
+    height: var(--header-h);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-medium);
+    transition: transform 400ms var(--ease-industrial), opacity 400ms ease;
     transform: translateY(-100%);
     opacity: 0;
 }
@@ -181,11 +212,12 @@ body.scroll-locked {
     opacity: 1;
 }
 
-.main-header.scrolled {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
+/* 首屏透明化由 JS 控制 section-index=0 时置 transparent */
+.main-header.transparent {
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom-color: transparent;
 }
 
 .header-inner {
@@ -194,14 +226,19 @@ body.scroll-locked {
     justify-content: space-between;
     max-width: 1400px;
     margin: 0 auto;
+    height: 100%;
+    padding: 0 var(--space-8);
 }
 
+/* 品牌字标：SIMPLE//NAVY 式双写 + 强调色斜杠 */
 .logo {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--space-2);
+    font-family: var(--font-mono);
     font-weight: 700;
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
+    letter-spacing: 0.14em;
     color: var(--text-primary);
     transition: opacity 200ms ease;
 }
@@ -210,93 +247,97 @@ body.scroll-locked {
     opacity: 0.7;
 }
 
-.logo svg {
-    width: 40px;
-    height: 40px;
-    color: var(--accent-primary);
+.logo .slash {
+    color: var(--color-accent);
+    margin: 0 1px;
+}
+
+.logo .logo-sub {
+    color: var(--text-secondary);
+    font-weight: 400;
+    font-size: var(--text-sm);
 }
 
 .main-nav {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    padding: var(--space-2);
-    border-radius: var(--radius-full);
-    border: 1px solid var(--glass-border);
+    gap: var(--space-1);
 }
 
+/* 等宽小字导航 */
 .nav-link {
-    padding: var(--space-2) var(--space-4);
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-mono);
     font-size: var(--text-sm);
-    font-weight: 500;
+    font-weight: 400;
+    letter-spacing: 0.12em;
     color: var(--text-secondary);
-    border-radius: var(--radius-full);
-    transition: all 200ms ease;
+    border-radius: 0;
+    transition: color 200ms ease, background 200ms ease;
     position: relative;
 }
 
 .nav-link:hover {
     color: var(--text-primary);
-    background: var(--bg-tertiary);
+    background: var(--color-accent-subtle);
 }
 
 .nav-link.active {
-    color: var(--text-inverse);
-    background: var(--accent-primary);
+    color: var(--color-accent);
 }
 
-.theme-toggle {
-    width: 44px;
-    height: 44px;
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: 2px;
+    height: 2px;
+    background: var(--color-accent);
+}
+
+/* 右侧控制区：语言切换 */
+.header-actions {
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-full);
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
+    gap: var(--space-3);
+}
+
+/* CN|EN 等权按钮 */
+.lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+}
+
+.lang-btn {
+    padding: var(--space-1) var(--space-2);
+    color: var(--text-muted);
+    border: 1px solid transparent;
+    transition: color 200ms ease, border-color 200ms ease;
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+}
+
+.lang-btn:hover {
     color: var(--text-primary);
-    transition: all 200ms ease;
 }
 
-.theme-toggle:hover {
-    background: var(--bg-tertiary);
-    transform: scale(1.05);
+.lang-btn.active {
+    color: var(--color-accent);
+    border-color: var(--border-strong);
 }
 
-.theme-toggle svg {
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    transition: all 300ms ease;
-}
-
-.theme-toggle .sun-icon {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-}
-
-.theme-toggle .moon-icon {
-    opacity: 0;
-    transform: rotate(90deg) scale(0);
-}
-
-[data-theme="dark"] .theme-toggle .sun-icon {
-    opacity: 0;
-    transform: rotate(-90deg) scale(0);
-}
-
-[data-theme="dark"] .theme-toggle .moon-icon {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
+.lang-sep {
+    color: var(--text-muted);
 }
 
 /* ============================================
-   Scroll Hint
+   Scroll Hint — 细线 + 光点下坠
    ============================================ */
 
 .scroll-hint {
@@ -307,23 +348,38 @@ body.scroll-locked {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-2);
-    color: var(--text-tertiary);
-    font-size: var(--text-sm);
-    animation: bounce 2s ease-in-out infinite;
-    opacity: 0.7;
+    gap: var(--space-3);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.85;
 }
 
-.scroll-arrow {
-    width: 24px;
-    height: 24px;
+.scroll-line {
+    position: relative;
+    width: 1px;
+    height: 44px;
+    background: var(--border-strong);
+    overflow: hidden;
 }
 
-@keyframes bounce {
-    0%, 100% {
-        transform: translateX(-50%) translateY(0);
-    }
-    50% {
-        transform: translateX(-50%) translateY(8px);
-    }
+/* 下坠光点 */
+.scroll-line::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -8px;
+    width: 1px;
+    height: 8px;
+    background: var(--color-accent);
+    animation: scroll-drop 1.8s var(--ease-industrial) infinite;
+}
+
+@keyframes scroll-drop {
+    0%   { transform: translateY(0); opacity: 0; }
+    12%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { transform: translateY(56px); opacity: 0; }
 }
