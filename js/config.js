@@ -33,20 +33,20 @@ window.SITE = {
             linkKey: 'works.view'
         },
         {
-            id: 'soloplugin',
-            year: '2026',
-            color: 'red',
-            link: 'https://github.com/LaoBiDeng321/SoloPlugin',
-            previewImg: 'https://opengraph.githubassets.com/1/LaoBiDeng321/SoloPlugin', // github.com deny iframe，用官方自动预览图
-            linkKey: 'works.viewCode'
-        },
-        {
             id: 'firefly',
             year: '2026',
             color: 'green',
             link: 'https://firefly-blog-lbd.netlify.app/',
             preview: 'https://firefly-blog-lbd.netlify.app/',
             linkKey: 'works.viewBlog'
+        },
+        {
+            id: 'soloplugin',
+            year: '2026',
+            color: 'red',
+            link: 'https://github.com/LaoBiDeng321/SoloPlugin',
+            previewImg: 'https://opengraph.githubassets.com/1/LaoBiDeng321/SoloPlugin', // github.com deny iframe，用官方自动预览图
+            linkKey: 'works.viewCode'
         },
         {
             id: 'desktoppet',

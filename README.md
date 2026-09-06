@@ -25,8 +25,8 @@
 |------|------|------|------|
 | SimpleNAVY | 网页设计 | 2026 | [访问](https://simplenavy.netlify.app/) |
 | OtherShore Game Studio | 网页设计 | 2026 | [访问](https://simplenavy.netlify.app/othershoregamestudio/) |
-| SoloPlugin | 浏览器插件 | 2026 | [源码](https://github.com/LaoBiDeng321/SoloPlugin) |
 | Firefly 主题博客 | 博客主题 | 2026 | [访问](https://firefly-blog-lbd.netlify.app/) |
+| SoloPlugin | 浏览器插件 | 2026 | [源码](https://github.com/LaoBiDeng321/SoloPlugin) |
 | ShShu 桌面宠物 | 桌面宠物 | 2026 | [源码](https://github.com/LaoBiDeng321/shshu_desktop_pet) |
 | Endfield 风格 Skill | 设计技能 | 2026 | [源码](https://github.com/LaoBiDeng321/Endfield-Style-Skill) |
 
