@@ -100,7 +100,7 @@
             othershore: 'web',
             soloplugin: 'extension',
             firefly: 'blog',
-            aiprojects: 'ai',
+            desktoppet: 'pet',
             endfieldskill: 'skill'
         };
         return map[id] || 'web';

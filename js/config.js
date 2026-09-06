@@ -49,12 +49,12 @@ window.SITE = {
             linkKey: 'works.viewBlog'
         },
         {
-            id: 'aiprojects',
-            year: '2025',
+            id: 'desktoppet',
+            year: '2026',
             color: 'cyan',
-            link: 'https://laobideng321.github.io/LBD-Some_AI_projects/index.html',
-            preview: 'https://laobideng321.github.io/LBD-Some_AI_projects/index.html',
-            linkKey: 'works.viewPreview'
+            link: 'https://github.com/LaoBiDeng321/shshu_desktop_pet',
+            previewImg: 'https://opengraph.githubassets.com/1/LaoBiDeng321/shshu_desktop_pet', // github.com deny iframe，用官方自动预览图
+            linkKey: 'works.viewCode'
         },
         {
             id: 'endfieldskill',
